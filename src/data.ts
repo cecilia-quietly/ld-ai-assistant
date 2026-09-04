@@ -161,6 +161,7 @@ export const curriculum: Module[] = [
         description: 'This Chapter positions content as the "connective tissue" across marketing functions and the broader organization, including HR, Sales and beyond. It highlights how content alignment acts as a force multiplier and establishes the need for an "Enterprise content strategy" to ensure a consistent, unified brand narrative across all departments and audiences.',
         duration: '10 mins',
         format: 'interactive',
+        slideDeckUrl: 'https://docs.google.com/presentation/d/1dsQaGnD1w6D6SJzxrfyX-erZ6cWeLbahtRlC4Xifv3I/edit?usp=sharing',
         outcome: '• Understand how and why content extends beyond Marketing\n• Define "Enterprise content strategy"\n• Explain how content joins up all of an organization\'s departments, LoBs and channels',
         discussionQuestions: [
           "What does ‘content’ mean and/or how does it come to life across different teams, LoBs and functions across an organization?",
@@ -248,6 +249,7 @@ export const curriculum: Module[] = [
         description: 'The landscape of professional services is undergoing a "Great Convergence." The lines between traditional advertising agencies, management consultancies, and specialized content shops have blurred into a single competitive arena. For Quietly to thrive, our team must understand not just what we do, but where we sit in this ecosystem. This chapter deconstructs the competitors we face, the evolving expectations of our clients, and the "Variable Fidelity" required to win in a market where AI is rapidly commoditizing basic execution.',
         duration: '20 mins',
         format: 'interactive',
+        slideDeckUrl: '/Quietly_LD_Module_1_4_How_Other_Agencies_Do_It.pdf',
         outcome: '• Identify the Players: Distinguish between the holdcos, management consultancies, and full-stack boutique agencies.\n• Master the Workflow: Understand the typical AOR campaign lifecycle and how content integrates into broader media and creative plans.\n• Navigate the Fidelity Spectrum: Learn to adapt the "look and feel" of deliverables based on whether the work is strategic consulting or creative planning.\n• Economics of Modern Content: Understand how AI and shifting client expectations have moved the "value bar", and where systems thinking and subject-matter depth will become key differentiators.',
         discussionQuestions: [
           "The Stakeholder Mirror: If you were a client-side Marketing Director, why would you hire a \"Big 4\" Consultancy over a Creative Boutique for a content project? Vice versa? What are they offering that we must emulate?",

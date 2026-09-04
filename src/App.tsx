@@ -1932,7 +1932,7 @@ export default function App() {
                                         <div className="flex items-center justify-between border-b border-brand-line/40 pb-3">
                                           <h5 className="text-base font-bold font-serif text-brand-ink tracking-tight flex items-center gap-2">
                                             <Presentation size={18} className="text-indigo-600" />
-                                            <span>VIEW, {course.title} Slide Deck</span>
+                                            <span>VIEW, {course.title.match(/Chapter\s+\d+/i)?.[0] || course.title} Slide Deck</span>
                                           </h5>
                                           <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted bg-white px-2.5 py-1 rounded-md border border-brand-line/60">
                                             Google Slides
@@ -2045,7 +2045,7 @@ export default function App() {
                                           <div className="bg-slate-50 border border-brand-line/60 rounded-2xl p-5 sm:p-6 space-y-6 shadow-sm animate-fade-in text-brand-ink select-text">
                                             <div className="text-left border-b border-brand-line/40 pb-4">
                                               <h5 className="text-base font-bold font-serif text-brand-ink tracking-tight">
-                                                Watch: How Other Agencies Do It
+                                                WATCH, Chapter 4: How Other Agencies Do It
                                               </h5>
                                             </div>
                                             {/* Embedded Google Video Container */}
@@ -3575,29 +3575,11 @@ export default function App() {
           }} 
         />
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-start gap-12 relative z-10">
-          <div className="max-w-xs">
+          <div className="max-w-md">
             <h4 className="text-2xl mb-4 italic">The Collective Intelligence.</h4>
             <p className="opacity-60 text-sm leading-relaxed">
               Quietly’s Learning & Development ecosystem is designed to evolve our delivery beyond standard documentation.
             </p>
-          </div>
-          <div className="grid grid-cols-2 gap-12">
-            <div className="space-y-4">
-              <h5 className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-30">Quick Links</h5>
-              <div className="flex flex-col gap-2 text-sm opacity-80">
-                <a href="#" className="hover:opacity-100 underline decoration-brand-bg/20 underline-offset-4">Prompt Library</a>
-                <a href="#" className="hover:opacity-100 underline decoration-brand-bg/20 underline-offset-4">Tool Matrix</a>
-                <a href="#" className="hover:opacity-100 underline decoration-brand-bg/20 underline-offset-4">Best Practices</a>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <h5 className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-30">Support</h5>
-              <div className="flex flex-col gap-2 text-sm opacity-80">
-                <a href="#" className="hover:opacity-100 underline decoration-brand-bg/20 underline-offset-4">Slack #learning-hub</a>
-                <a href="#" className="hover:opacity-100 underline decoration-brand-bg/20 underline-offset-4">Guidelines</a>
-                <a href="#" className="hover:opacity-100 underline decoration-brand-bg/20 underline-offset-4">Feedback</a>
-              </div>
-            </div>
           </div>
         </div>
         <div className="max-w-6xl mx-auto mt-20 pt-8 border-t border-brand-bg/10 flex justify-between items-center text-[10px] uppercase tracking-widest opacity-30 relative z-10">

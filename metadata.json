@@ -2,5 +2,7 @@
   "name": "Quietly L&D Hub",
   "description": "A central hub for team training, marketing foundations, and AI principles at Quietly.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
