@@ -2515,7 +2515,12 @@ export default function App() {
                             {module.duration && (
                               <div className="flex items-center gap-1.5 text-[11px] text-brand-ink/70 font-medium mt-1">
                                 <Clock size={11} className="text-brand-muted shrink-0" />
-                                <span>{module.duration}</span>
+                                <span>
+                                  {(module.isOptional || module.number === 0) && (
+                                    <strong className="font-bold text-brand-ink mr-1">OPTIONAL:</strong>
+                                  )}
+                                  {module.duration}
+                                </span>
                               </div>
                             )}
                           </div>
@@ -2627,7 +2632,7 @@ export default function App() {
                     <div className="flex items-center gap-2 mb-8">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-bg rounded-lg border border-brand-line text-xs font-medium text-brand-ink">
                         <Clock size={12} className="text-brand-muted" />
-                        <span>Total Time Required: <strong className="font-semibold text-brand-ink">{selectedModule.duration}</strong></span>
+                        <span>{(selectedModule.isOptional || selectedModule.number === 0) && <strong className="font-bold text-brand-ink mr-1">OPTIONAL:</strong>}Total Time Required: <strong className="font-semibold text-brand-ink">{selectedModule.duration}</strong></span>
                       </span>
                     </div>
                   )}

@@ -34,6 +34,7 @@ export interface Module {
   subtitle: string;
   purpose: string;
   duration?: string;
+  isOptional?: boolean;
   preface?: string;
   courses: Course[];
   accentColor: string;
@@ -48,6 +49,7 @@ export const curriculum: Module[] = [
     title: 'Module 0 — Learning How to Learn',
     subtitle: 'Setting the stage for iterative growth',
     duration: 'Approx. 15 hours',
+    isOptional: true,
     purpose: 'Before diving into marketing and AI models, we must first learn how to acquire skills effectively. This section introduces the custom modules and integrates the world-renowned Coursera course, establishing why continuous and iterative learning is our strategic advantage.',
     accentColor: '#3182CE',
     imageUrl: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=800',
