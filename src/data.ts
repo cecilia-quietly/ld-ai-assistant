@@ -35,6 +35,7 @@ export interface Module {
   purpose: string;
   duration?: string;
   isOptional?: boolean;
+  isLocked?: boolean;
   preface?: string;
   courses: Course[];
   accentColor: string;
@@ -251,7 +252,7 @@ export const curriculum: Module[] = [
         description: 'The landscape of professional services is undergoing a "Great Convergence." The lines between traditional advertising agencies, management consultancies, and specialized content shops have blurred into a single competitive arena. For Quietly to thrive, our team must understand not just what we do, but where we sit in this ecosystem. This chapter deconstructs the competitors we face, the evolving expectations of our clients, and the "Variable Fidelity" required to win in a market where AI is rapidly commoditizing basic execution.',
         duration: '20 mins',
         format: 'interactive',
-        slideDeckUrl: '/Quietly_LD_Module_1_4_How_Other_Agencies_Do_It.pdf',
+        slideDeckUrl: 'https://docs.google.com/presentation/d/1NPNSQccJ__4tGSb1cGk8cG2tE-7aSxDhAD9oUqVAtJg/edit?slide=id.g32cad2cbb84_0_3#slide=id.g32cad2cbb84_0_3',
         outcome: '• Identify the Players: Distinguish between the holdcos, management consultancies, and full-stack boutique agencies.\n• Master the Workflow: Understand the typical AOR campaign lifecycle and how content integrates into broader media and creative plans.\n• Navigate the Fidelity Spectrum: Learn to adapt the "look and feel" of deliverables based on whether the work is strategic consulting or creative planning.\n• Economics of Modern Content: Understand how AI and shifting client expectations have moved the "value bar", and where systems thinking and subject-matter depth will become key differentiators.',
         discussionQuestions: [
           "The Stakeholder Mirror: If you were a client-side Marketing Director, why would you hire a \"Big 4\" Consultancy over a Creative Boutique for a content project? Vice versa? What are they offering that we must emulate?",
@@ -299,6 +300,7 @@ export const curriculum: Module[] = [
     number: 2,
     title: 'Foundational — AI @ Quietly',
     subtitle: 'Philosophy & Principles',
+    isLocked: true,
     purpose: 'To move staff away from using AI as a "taskmaster" and toward using it as a "critical thinking partner".',
     preface: 'Philosophy: Understanding "the forest from the trees" and how to benefit from AI’s thoughts rather than just its output.',
     accentColor: '#319795',
@@ -323,33 +325,133 @@ export const curriculum: Module[] = [
     number: 3,
     title: "Applied — Quietly's Tool Stack",
     subtitle: 'Standardizing research & synthesis',
-    purpose: 'To standardize how we use data and synthesis tools across different departments.',
+    duration: 'Approx. 1.5 hours',
+    isLocked: true,
+    purpose: 'To standardize how we use data and synthesis tools across different departments, aligning raw research outputs with strategic intent and high-impact client deliverables.',
+    outcome: '• Master Quietly’s 5 core tool pillars: Social listening, search intelligence, competitive benchmarking, syndicated research, and first-party analytics.\n• Transition seamlessly from raw data exports to actionable insights, creative concepts, and executive presentation decks.\n• Establish shared cross-functional taxonomy between Content Leads, Strategists, and Client Partners.',
     accentColor: '#2C5282',
     imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
     courses: [
       {
-        id: 'tools-by-design',
-        title: 'Tools by Design',
-        description: 'Which Tool? Cheat Sheet. A digital matrix helping staff choose between research tool types based on specific questions.',
-        subtopics: [
-          'Social listening (Meltwater, vidIQ)',
-          'Search/keyword research (SEMRush)',
-          'Competitive intelligence (Similarweb)',
-          'Subscription research (GWI, Statista)',
-          'First-party data (CRM, Analytics)'
+        id: 'chapter-1-tools-by-design',
+        title: 'Chapter 1: Tools by Design',
+        description: 'A structured decision framework matching specific client inquiries to the ideal research methodology. We will deconstruct the "Which Tool? Cheat Sheet" to navigate social listening, keyword architecture, competitive intelligence, subscription panels, and first-party analytics.',
+        duration: '30 mins',
+        format: 'interactive',
+        outcome: '• Navigate the 5 primary research tool categories with precision and confidence.\n• Formulate sharp, testable hypotheses before pulling raw data from specialized platforms.\n• Select the optimal tool combination based on turnaround time, sample fidelity, and commercial objectives.',
+        discussionQuestions: [
+          "Before pulling data from a tool, how do you formulate the exact business hypothesis you are testing?",
+          "When is qualitative audience research (like GWI or Statista) superior to real-time search volume (SEMrush), and how do they validate each other?",
+          "How do we ensure research findings translate into actionable content strategy rather than raw data dumps?",
+          "What are the common pitfalls when relying exclusively on social listening platforms without cross-referencing first-party CRM metrics?",
+          "How can we balance exploratory research with strict project hour allocations?"
+        ],
+        disciplines: [
+          {
+            id: 'tool-pillar-social-listening',
+            title: 'Social Listening & Audience Sentiment',
+            description: 'Platforms like Meltwater and Brandwatch allow us to monitor unprompted brand conversations, volume spikes, and emotional sentiment across social channels.\n\nBest used for: Brand crisis tracking, campaign reaction sentiment, share-of-voice vs competitors, and uncovering emergent cultural discourse.\n\nKey metric: Net Sentiment Score, Volume Velocity, and Top Mention Drivers.'
+          },
+          {
+            id: 'tool-pillar-search-intent',
+            title: 'Search Intent & Keyword Architecture',
+            description: 'SEMrush and Ahrefs uncover exactly what questions and queries target audiences are typing into search engines.\n\nBest used for: Information architecture, content gap identification, SERP feature opportunities, and long-tail query clusters.\n\nKey metric: Search Volume, Keyword Difficulty (KD%), and Search Intent (Informational, Navigational, Commercial, Transactional).'
+          },
+          {
+            id: 'tool-pillar-competitive-intelligence',
+            title: 'Competitive Intelligence & Traffic Benchmarking',
+            description: 'Similarweb and SpyFu provide estimated top-of-funnel web traffic, referral sources, and channel distribution models for competitors.\n\nBest used for: Channel attribution benchmarking, competitive growth trends, and identifying under-exploited referral partners.\n\nKey metric: Traffic Share by Channel, Bounce Rate, and Top Referring Domains.'
+          },
+          {
+            id: 'tool-pillar-syndicated-research',
+            title: 'Syndicated Panel & Consumer Research',
+            description: 'GWI (GlobalWebIndex) and Statista provide statistically weighted survey panels representing millions of global consumers.\n\nBest used for: Persona validation, cross-generational media consumption habits, and high-level behavioral trends.\n\nKey metric: Index Scores (comparing target audience likelihood against national averages) and Segment Penetration.'
+          },
+          {
+            id: 'tool-pillar-first-party-data',
+            title: 'First-Party Analytics & CRM Telemetry',
+            description: 'Google Analytics 4, HubSpot, and CRM systems reveal the actual ground truth of what users do once they land on owned properties.\n\nBest used for: Content ROI attribution, conversion funnel drop-offs, and validating top-performing landing pages.\n\nKey metric: Engaged Sessions, Scroll Depth, Conversion Rate, and Customer Lifetime Value (LTV).'
+          }
         ]
       },
       {
-        id: 'tool-specific-usage',
-        title: 'Tool-Specific Usage',
-        description: 'Use cases and best practices for Semrush, vidIQ, Buzzsumo, etc.',
-        format: 'video'
+        id: 'chapter-2-tool-specific-usage',
+        title: 'Chapter 2: Tool-Specific Usage',
+        description: 'Tactical execution playbooks and best practices for Quietly’s core toolkit. Learn how to configure targeted queries, build precision boolean search strings, extract high-signal exports, and avoid common data traps across SEMrush, vidIQ, BuzzSumo, Similarweb, and GWI.',
+        duration: '35 mins',
+        format: 'interactive',
+        outcome: '• Master advanced search filters and keyword gap analysis in SEMrush.\n• Extract content resonance patterns, outlier formats, and influencer authority using BuzzSumo.\n• Uncover competitor distribution channels, referral traffic, and search share in Similarweb.\n• Optimize YouTube metadata, velocity, and tags using vidIQ.\n• Build consumer sentiment profiles using syndicated panel data.',
+        discussionQuestions: [
+          "How do you validate the accuracy and sample size of third-party tool estimates before presenting them to a client?",
+          "What is your workflow for isolating high-intent, low-competition keywords in SEMrush vs. vanity search volumes?",
+          "In video and YouTube strategy (via vidIQ), how do title tags, thumbnail velocity, and search volume interact?",
+          "How can we streamline the handoff of raw tool exports between strategists and content creators?",
+          "When should you challenge data that seems counterintuitive to your creative intuition?"
+        ],
+        disciplines: [
+          {
+            id: 'usage-semrush',
+            title: 'SEMrush: Keyword Gap & Content Architecture',
+            description: 'Using the Keyword Gap tool to identify competitor ranking vulnerabilities where Quietly clients can win quick organic wins.\n\nWorkflow: Compare client domain against top 3 direct competitors, filter by "Untapped" and "Weak", sort by search intent to build immediate editorial clusters.\n\nPro-Tip: Always check SERP volatility and current snippet ownership before prioritizing high-volume keywords.'
+          },
+          {
+            id: 'usage-buzzsumo',
+            title: 'BuzzSumo: Content Resonance & Viral Outliers',
+            description: 'Analyzing which headlines, formats (listicles, guides, interviews), and word counts generated disproportionate social engagement over the past 12 months.\n\nWorkflow: Search core industry keywords, review top 100 performing articles by network shares, and extract the recurring headline hooks and content structures.\n\nPro-Tip: Use Evergreen Score to isolate enduring content assets from temporary viral spikes.'
+          },
+          {
+            id: 'usage-similarweb',
+            title: 'Similarweb: Traffic Source Deconstruction',
+            description: 'Mapping competitor digital marketing channels to determine where their traffic originates: direct, organic search, paid search, social, or display.\n\nWorkflow: Benchmark traffic shares over a 6-month trailing window, identify surge periods, and isolate which specific referral publishers drive conversion-ready traffic.\n\nPro-Tip: Examine device split (mobile vs desktop) to guide content format requirements.'
+          },
+          {
+            id: 'usage-vidiq',
+            title: 'vidIQ: YouTube Optimization & Search Velocity',
+            description: 'Demystifying YouTube algorithm dynamics to maximize discoverability and audience retention for branded video series.\n\nWorkflow: Audit video tags against high-volume YouTube search queries, track Views Per Hour (VPH) velocity, and analyze competitor thumbnail composition.\n\nPro-Tip: Optimize the first 120 characters of video descriptions to appear in preview snippets.'
+          },
+          {
+            id: 'usage-gwi',
+            title: 'GWI: Deep Persona Crosstabs & Psychographics',
+            description: 'Generating statistically validated audience insights that go beyond basic age and geography to uncover motivations, attitudes, and brand perceptions.\n\nWorkflow: Build custom audience segments, cross-tabulate media touchpoints, and filter for index scores > 120 to highlight distinct demographic preferences.\n\nPro-Tip: Pair GWI quantitative data with live social listening quotes to bring persona slides to life.'
+          }
+        ]
       },
       {
-        id: 'work-stream-application',
-        title: 'Work Stream Application',
-        description: 'How Content Leads vs. Strategists vs. Client Partners use the same tools for different outcomes (e.g., gap analysis vs qualitative audit).',
-        format: 'podcast'
+        id: 'chapter-3-work-stream-application',
+        title: 'Chapter 3: Work Stream Application',
+        description: 'Connecting raw tool outputs to daily client deliverables. Examine how Content Leads, Brand Strategists, and Account Directors interpret the same data differently to drive creative briefs, editorial calendars, competitive audits, and C-suite commercial buy-in.',
+        duration: '25 mins',
+        format: 'interactive',
+        outcome: '• Understand the distinct operational lenses of Strategists, Content Leads, and Client Partners when analyzing shared data.\n• Convert dry SERP charts and competitor audits into compelling editorial narrative arcs.\n• Defend strategic scopes, content budgets, and creative platforms with defensible quantitative proof.\n• Calibrate deliverable fidelity to audience expectations—from internal sync notes to polished executive decks.',
+        discussionQuestions: [
+          "How should a Content Lead translate a list of 50 keywords from a Strategist into 3 high-impact story arcs?",
+          "When presenting research to a skeptical CMO, which tool metrics build immediate credibility?",
+          "How do we prevent 'analysis paralysis' where teams spend excessive time gathering data rather than building creative deliverables?",
+          "What are the telltale signs that a deliverable is too data-heavy and failing to communicate the strategic takeaway?",
+          "How does data-led storytelling differ between a mid-campaign status update and a final retrospective post-mortem?"
+        ],
+        disciplines: [
+          {
+            id: 'workstream-strategist',
+            title: 'The Strategist: Opportunity Sizing & Architecture',
+            description: 'How Strategists synthesize tool outputs to establish brand altitude, market positioning, and content opportunity spaces.\n\nDeliverables: Competitive Landscape Audits, Keyword Architectures, Whitespace Opportunity Maps, and Audience Persona Dossiers.\n\nCore Mindset: "Where can our client legitimately differentiate and capture market share?"'
+          },
+          {
+            id: 'workstream-content-lead',
+            title: 'The Content Lead: Editorial Narrative & Format Hooks',
+            description: 'How Content Leads translate data points into creative ideas, editorial themes, and compelling storytelling angles.\n\nDeliverables: Editorial Calendars, Content Briefs, Headline Frameworks, and Series Storyboards.\n\nCore Mindset: "How do we make this insight emotionally engaging and irresistible to our audience?"'
+          },
+          {
+            id: 'workstream-client-partner',
+            title: 'The Client Partner: Commercial Defense & C-Suite Buy-In',
+            description: 'How Account Directors and Client Partners use data to defend project scopes, budget allocations, and demonstrate ROI.\n\nDeliverables: Executive Summaries, Quarterly Business Reviews (QBRs), SOW Justifications, and Metric Impact Reports.\n\nCore Mindset: "How does this research prove that Quietly is moving the commercial needle for the client?"'
+          },
+          {
+            id: 'workstream-creative-design',
+            title: 'The Creative & Visual Designer: Information Design',
+            description: 'How Designers transform complex matrices and statistical data into elegant, glanceable infographics and visual frameworks.\n\nDeliverables: Data Visualizations, Flowcharts, Slide Templates, and Interactive Brand Assets.\n\nCore Mindset: "How do we communicate this insight with visual clarity and brand elegance?"'
+          }
+        ]
       }
     ]
   },
@@ -358,6 +460,7 @@ export const curriculum: Module[] = [
     number: 4,
     title: 'Applied — Practical AI Application',
     subtitle: 'Evolving delivery',
+    isLocked: true,
     purpose: 'Enabling staff to ship more sophisticated, "merchandised" content.',
     accentColor: '#805AD5',
     imageUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=800',

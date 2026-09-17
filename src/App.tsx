@@ -37,9 +37,15 @@ import {
   Menu as MenuIcon,
   GitFork,
   CornerDownRight,
-  Network
+  Network,
+  Shield,
+  Edit3,
+  Unlock,
+  Plus
 } from 'lucide-react';
-import { curriculum, Module, Course } from './data';
+import { curriculum as initialCurriculum, Module, Course, Discipline } from './data';
+import { AdminEditorModal } from './components/AdminEditorModal';
+import { AdminAuthModal, ADMIN_PASSCODE } from './components/AdminAuthModal';
 import logo from './logo.png';
 import bgDark from './bg-dark.png';
 import bgLight from './bg-light.png';
@@ -553,6 +559,142 @@ export default function App() {
     }
   });
 
+  // Admin Mode state (Passcode protected: ldadmin808)
+  const [isAdminMode, setIsAdminMode] = useState<boolean>(() => {
+    try {
+      const hasAuth = localStorage.getItem('quietly_admin_authenticated') === 'true';
+      const isActive = localStorage.getItem('quietly_admin_mode') === 'true';
+      return hasAuth && isActive;
+    } catch {
+      return false;
+    }
+  });
+  const [showAdminAuthModal, setShowAdminAuthModal] = useState<boolean>(false);
+
+  const toggleAdminMode = () => {
+    if (isAdminMode) {
+      // Exit Admin Mode
+      setIsAdminMode(false);
+      try {
+        localStorage.removeItem('quietly_admin_mode');
+        localStorage.removeItem('quietly_admin_authenticated');
+      } catch (e) {
+        console.error('Failed to clear admin state', e);
+      }
+    } else {
+      // Open passcode modal to authenticate
+      setShowAdminAuthModal(true);
+    }
+  };
+
+  const handleAdminAuthSuccess = () => {
+    setIsAdminMode(true);
+    try {
+      localStorage.setItem('quietly_admin_mode', 'true');
+      localStorage.setItem('quietly_admin_authenticated', 'true');
+    } catch (e) {
+      console.error('Failed to persist admin state', e);
+    }
+  };
+
+  // Editable Curriculum State (with persistence)
+  const [curriculumData, setCurriculumData] = useState<Module[]>(() => {
+    try {
+      const saved = localStorage.getItem('quietly_curriculum_custom');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // Merge custom edits on top of initialCurriculum so that no structures or fields are dropped
+          return initialCurriculum.map(baseMod => {
+            const savedMod = parsed.find((m: Module) => m.id === baseMod.id || m.number === baseMod.number);
+            if (!savedMod) return baseMod;
+            return {
+              ...baseMod,
+              ...savedMod,
+              courses: baseMod.courses.map(baseCourse => {
+                const savedCourse = savedMod.courses?.find((c: Course) => c.id === baseCourse.id);
+                if (!savedCourse) return baseCourse;
+                const slideDeck = (baseCourse.id === 'chapter-4-agency-vs-consultancy-mindset' && (!savedCourse.slideDeckUrl || savedCourse.slideDeckUrl.includes('How_Other_Agencies_Do_It.pdf')))
+                  ? baseCourse.slideDeckUrl
+                  : (savedCourse.slideDeckUrl || baseCourse.slideDeckUrl);
+                return { ...baseCourse, ...savedCourse, slideDeckUrl: slideDeck };
+              })
+            };
+          });
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load custom curriculum from localStorage', e);
+    }
+    return initialCurriculum;
+  });
+
+  // Alias for global usage across App
+  const curriculum = curriculumData;
+
+  // Editing modal state
+  const [editingTarget, setEditingTarget] = useState<{
+    type: 'module' | 'chapter';
+    module: Module | null;
+    course: Course | null;
+  } | null>(null);
+
+  const handleSaveModule = (updatedModule: Module) => {
+    setCurriculumData(prev => {
+      const updated = prev.map(m => m.id === updatedModule.id ? updatedModule : m);
+      try {
+        localStorage.setItem('quietly_curriculum_custom', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to save curriculum to localStorage', e);
+      }
+      return updated;
+    });
+  };
+
+  const handleSaveCourse = (moduleId: string, updatedCourse: Course) => {
+    setCurriculumData(prev => {
+      let matched = false;
+      const updated = prev.map(m => {
+        const contains = m.courses.some(c => c.id === updatedCourse.id);
+        const idMatches = Boolean(moduleId && m.id === moduleId);
+        if (contains || (idMatches && !matched)) {
+          matched = true;
+          return {
+            ...m,
+            courses: m.courses.map(c => c.id === updatedCourse.id ? { ...c, ...updatedCourse } : c)
+          };
+        }
+        return m;
+      });
+      try {
+        localStorage.setItem('quietly_curriculum_custom', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to save curriculum to localStorage', e);
+      }
+      return updated;
+    });
+
+    // Also update activeDiscipline if user was inspecting a discipline in this course
+    setActiveDiscipline(prev => {
+      if (!prev || prev.course.id !== updatedCourse.id) return prev;
+      const updatedDisc = updatedCourse.disciplines?.find(d => d.id === prev.discipline.id) || prev.discipline;
+      return {
+        ...prev,
+        course: { ...prev.course, ...updatedCourse },
+        discipline: updatedDisc
+      };
+    });
+  };
+
+  const handleResetToDefault = () => {
+    setCurriculumData(initialCurriculum);
+    try {
+      localStorage.removeItem('quietly_curriculum_custom');
+    } catch (e) {
+      console.error('Failed to clear curriculum storage', e);
+    }
+  };
+
   useEffect(() => {
     localStorage.setItem('quietly_completed_disciplines', JSON.stringify(completedDisciplines));
   }, [completedDisciplines]);
@@ -563,9 +705,9 @@ export default function App() {
       moduleId: m.id,
       moduleNumber: m.number,
       moduleTitle: m.title,
-      isModuleLocked: m.number >= 2
+      isModuleLocked: isAdminMode ? false : (m.isLocked !== undefined ? m.isLocked : m.number >= 2)
     })));
-  }, []);
+  }, [curriculum, isAdminMode]);
 
   const activeChapterIndex = useMemo(() => {
     if (!selectedChapterId) return -1;
@@ -574,13 +716,16 @@ export default function App() {
 
   const activeChapter = useMemo(() => {
     if (activeChapterIndex === -1) return null;
-    return allCourses[activeChapterIndex];
-  }, [activeChapterIndex, allCourses]);
+    const course = allCourses[activeChapterIndex];
+    if (!course) return null;
+    if (!isAdminMode && course.isModuleLocked) return null;
+    return course;
+  }, [activeChapterIndex, allCourses, isAdminMode]);
 
   const activeChapterModule = useMemo(() => {
     if (!activeChapter) return null;
-    return curriculum.find(m => m.id === activeChapter.moduleId);
-  }, [activeChapter]);
+    return curriculum.find(m => m.id === (activeChapter as any).moduleId || m.courses.some(c => c.id === activeChapter.id)) || null;
+  }, [activeChapter, curriculum]);
 
   const prevChapter = useMemo(() => {
     if (activeChapterIndex <= 0) return null;
@@ -597,7 +742,9 @@ export default function App() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (menuOpen) {
+        if (showAdminAuthModal) {
+          setShowAdminAuthModal(false);
+        } else if (menuOpen) {
           setMenuOpen(false);
           setHoveredMenuModuleId(null);
         } else if (showChapterSelector) {
@@ -609,7 +756,35 @@ export default function App() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedChapterId, menuOpen, showChapterSelector]);
+  }, [selectedChapterId, menuOpen, showChapterSelector, showAdminAuthModal]);
+
+  // Handle URL Param (?admin=ldadmin808) and Global Keyboard Shortcut (Ctrl/Cmd + Shift + A)
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const adminParam = params.get('admin') || params.get('pwd');
+      if (adminParam === ADMIN_PASSCODE) {
+        setIsAdminMode(true);
+        localStorage.setItem('quietly_admin_mode', 'true');
+        localStorage.setItem('quietly_admin_authenticated', 'true');
+        // Clean up URL parameter cleanly
+        const cleanUrl = window.location.pathname + window.location.hash;
+        window.history.replaceState({}, '', cleanUrl);
+      }
+    } catch (e) {
+      console.error('Failed to parse admin URL query param', e);
+    }
+
+    const handleAdminShortcut = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'a' || e.key === 'A')) {
+        e.preventDefault();
+        toggleAdminMode();
+      }
+    };
+
+    window.addEventListener('keydown', handleAdminShortcut);
+    return () => window.removeEventListener('keydown', handleAdminShortcut);
+  }, [isAdminMode]);
 
 
   useEffect(() => {
@@ -622,7 +797,7 @@ export default function App() {
       if (match) return match;
     }
     return null;
-  }, []);
+  }, [curriculum]);
 
   useEffect(() => {
     if (!chapter3LightboxOpen || !chapter3Course) return;
@@ -1726,6 +1901,27 @@ export default function App() {
     }));
   };
 
+  // Format outcome text into clean bullet points
+  const renderOutcomeBullets = (outcomeText: string, textSize: string = "text-xs") => {
+    if (!outcomeText) return null;
+    const lines = outcomeText.split('\n').map(l => l.trim()).filter(Boolean);
+    if (lines.length === 0) return null;
+    
+    return (
+      <ul className="space-y-1.5 list-none my-1">
+        {lines.map((line, idx) => {
+          const cleanText = line.replace(/^[-*•–—]\s*/, '');
+          return (
+            <li key={idx} className={`flex items-start gap-2 ${textSize} text-brand-ink/90 leading-relaxed font-light`}>
+              <span className="text-brand-ink/60 select-none font-bold mt-0.5">•</span>
+              <span className="flex-1">{cleanText}</span>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
+
   // Filter modules and courses based on search
   const renderCourseContent = (course: Course) => {
     return (
@@ -1733,7 +1929,7 @@ export default function App() {
                                 {course.outcome && course.id !== 'module-0-introduction' && (
                                   <div className="p-6 bg-brand-bg/40 rounded-2xl border border-brand-line/60 my-2">
                                     <h4 className="text-xs font-semibold uppercase tracking-wider mb-2 text-brand-ink">Expected Outcome</h4>
-                                    <p className="text-sm text-brand-ink leading-relaxed font-light whitespace-pre-line">{course.outcome}</p>
+                                    {renderOutcomeBullets(course.outcome, "text-sm")}
                                   </div>
                                 )}
                                 
@@ -2051,12 +2247,6 @@ export default function App() {
                                             {/* Embedded Google Video Container */}
                                             <Chapter4VideoPlayer />
                                           </div>
-
-
-
-
-
-
                                         </div>
                                       )}
 
@@ -2147,7 +2337,7 @@ export default function App() {
                                       </div>
                                     )}
 
-                                    {(course.id === 'chapter-1-marketing-disciplines' || course.id === 'chapter-4-agency-vs-consultancy-mindset') && (
+{(course.id === 'chapter-1-marketing-disciplines' || course.id === 'chapter-4-agency-vs-consultancy-mindset') && (
                                       <div className="pt-6 mt-6 border-t border-brand-line/20 flex justify-center">
                                         <button 
                                           onClick={() => {
@@ -2205,9 +2395,15 @@ export default function App() {
       }
       return null;
     }).filter(Boolean) as Module[];
-  }, [searchQuery]);
+  }, [curriculum, searchQuery]);
 
-  const selectedModule = curriculum.find(m => m.id === selectedModuleId);
+  const selectedModule = useMemo(() => {
+    const mod = curriculum.find(m => m.id === selectedModuleId);
+    if (!mod) return null;
+    const isModuleLocked = mod.isLocked !== undefined ? mod.isLocked : mod.number >= 2;
+    if (!isAdminMode && isModuleLocked) return null;
+    return mod;
+  }, [curriculum, selectedModuleId, isAdminMode]);
 
   const FormatIcon = ({ format }: { format?: string }) => {
     switch (format) {
@@ -2267,7 +2463,8 @@ export default function App() {
                 >
                   <div className="space-y-1">
                     {curriculum.map((mod) => {
-                      const isLocked = mod.number >= 2;
+                      const isModuleLocked = mod.isLocked !== undefined ? mod.isLocked : mod.number >= 2;
+                      const isLocked = !isAdminMode && isModuleLocked;
                       const isHovered = !isLocked && (hoveredMenuModuleId || curriculum[1]?.id) === mod.id;
                       const hasCourses = mod.courses && mod.courses.length > 0;
                       const cleanTitle = mod.title.replace(/^Module \d+\s*(?:—|-|:)\s*/, '');
@@ -2302,10 +2499,14 @@ export default function App() {
                             <span className="truncate pr-2 normal-case text-[13px]">
                               {moduleDisplayName}
                             </span>
-                            {isLocked ? (
-                              <span className="inline-flex items-center gap-1 text-[9px] uppercase tracking-wider bg-slate-100/90 text-slate-500 px-1.5 py-0.5 rounded font-mono shrink-0">
-                                <Lock size={10} className="opacity-70" />
-                                <span>Soon</span>
+                            {isModuleLocked ? (
+                              <span className={`inline-flex items-center gap-1 text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded font-mono shrink-0 ${
+                                isAdminMode 
+                                  ? 'bg-amber-100 text-amber-900 border border-amber-300' 
+                                  : 'bg-slate-100/90 text-slate-500'
+                              }`}>
+                                <Lock size={10} className={isAdminMode ? 'text-amber-700' : 'opacity-70'} />
+                                <span>{isAdminMode ? 'Draft' : 'Soon'}</span>
                               </span>
                             ) : hasCourses ? (
                               <ChevronRight 
@@ -2390,8 +2591,59 @@ export default function App() {
 
           <a href="#curriculum" className="hover:opacity-100 opacity-60 transition-opacity">Curriculum</a>
           <a href="#" className="hover:opacity-100 opacity-60 transition-opacity">Philosophy</a>
+
+          {/* Admin Mode Toggle / Auth */}
+          {isAdminMode ? (
+            <button
+              onClick={toggleAdminMode}
+              className="flex items-center gap-1.5 py-1 px-2.5 rounded-full border text-[11px] font-semibold transition-all cursor-pointer bg-amber-100 text-amber-900 border-amber-300 shadow-xs hover:bg-amber-200"
+              title="Admin Mode Active - Click to exit"
+            >
+              <Shield size={12} className="text-amber-700" />
+              <span>Admin Active</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse" />
+            </button>
+          ) : (
+            <button
+              onClick={() => setShowAdminAuthModal(true)}
+              className="flex items-center gap-1.5 py-1 px-2.5 rounded-full border text-[11px] font-medium transition-all cursor-pointer bg-transparent text-brand-ink/50 border-brand-line/60 hover:text-brand-ink hover:border-brand-ink/40"
+              title="Administrator Sign-in (passcode required)"
+            >
+              <Lock size={11} className="text-brand-muted opacity-70" />
+              <span>Admin</span>
+            </button>
+          )}
         </div>
       </header>
+
+      {/* Admin Mode Floating Notification Banner */}
+      {isAdminMode && (
+        <div className="fixed top-[74px] sm:top-[74px] left-0 right-0 z-40 bg-amber-500 text-slate-950 px-4 py-2 text-xs font-semibold flex items-center justify-between border-b border-amber-600/30 shadow-sm">
+          <div className="flex items-center gap-3 max-w-6xl mx-auto w-full justify-between">
+            <div className="flex items-center gap-2">
+              <Shield size={14} className="text-slate-950" />
+              <span>
+                <strong>Admin Mode Active:</strong> You can click into and preview locked modules (e.g. Module 3) and edit their chapters, playbooks, and reflection prompts.
+              </span>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <button 
+                onClick={handleResetToDefault}
+                className="text-[11px] text-slate-900 hover:text-red-900 underline cursor-pointer"
+                title="Reset custom edits"
+              >
+                Reset All Edits
+              </button>
+              <button 
+                onClick={toggleAdminMode}
+                className="px-2.5 py-0.5 rounded bg-slate-900 text-white text-[11px] hover:bg-slate-800 transition-colors cursor-pointer"
+              >
+                Exit Admin
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <main className="pt-[180px] pb-20 px-6 max-w-6xl mx-auto relative">
         {/* Main Body Background Texture */}
@@ -2462,7 +2714,8 @@ export default function App() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredResults.map((module, idx) => {
-                const isLocked = module.number >= 2;
+                const isModuleLocked = module.isLocked !== undefined ? module.isLocked : module.number >= 2;
+                const isLocked = !isAdminMode && isModuleLocked;
                 return (
                   <motion.div
                     key={module.id}
@@ -2492,6 +2745,15 @@ export default function App() {
                          <span className="px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest border border-brand-line">{module.number === 0 ? "Module 0" : `Module 0${module.number}`}</span>
                       </div>
 
+                      {/* Admin Draft Badge */}
+                      {isAdminMode && isModuleLocked && (
+                        <div className="absolute top-6 right-6 z-20 flex items-center gap-1.5 px-3 py-1 bg-amber-500 text-white rounded-full text-[10px] font-bold tracking-wider uppercase backdrop-blur-md shadow-md">
+                          <Lock size={11} />
+                          <span>Draft • Admin Preview</span>
+                        </div>
+                      )}
+
+                      {/* Regular Locked Overlay for non-admins */}
                       {isLocked && (
                         <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md z-20 flex flex-col items-center justify-center p-6 text-center text-white">
                           <div className="w-12 h-12 rounded-full bg-slate-800/90 border border-white/20 flex items-center justify-center shadow-xl mb-3">
@@ -2524,15 +2786,31 @@ export default function App() {
                               </div>
                             )}
                           </div>
-                          {!isLocked ? (
-                            <div className="w-10 h-10 border border-brand-line rounded-full flex items-center justify-center group-hover:bg-brand-ink group-hover:text-brand-bg transition-all duration-500">
-                              <ArrowRight size={16} />
-                            </div>
-                          ) : (
-                            <div className="w-10 h-10 border border-brand-line/60 bg-brand-line/20 rounded-full flex items-center justify-center text-brand-muted">
-                              <Lock size={16} />
-                            </div>
-                          )}
+                          <div className="flex items-center gap-2">
+                            {isAdminMode && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setEditingTarget({ type: 'module', module, course: null });
+                                }}
+                                className="px-2.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 flex items-center gap-1 transition-colors cursor-pointer"
+                                title="Edit module info"
+                              >
+                                <Edit3 size={11} />
+                                <span>Edit</span>
+                              </button>
+                            )}
+                            {!isLocked ? (
+                              <div className="w-10 h-10 border border-brand-line rounded-full flex items-center justify-center group-hover:bg-brand-ink group-hover:text-brand-bg transition-all duration-500">
+                                <ArrowRight size={16} />
+                              </div>
+                            ) : (
+                              <div className="w-10 h-10 border border-brand-line/60 bg-brand-line/20 rounded-full flex items-center justify-center text-brand-muted">
+                                <Lock size={16} />
+                              </div>
+                            )}
+                          </div>
                         </div>
                         <h3 className="text-3xl mb-4 leading-tight">{module.title}</h3>
                         <p className="text-brand-muted text-sm leading-relaxed max-w-sm whitespace-pre-line">{module.purpose}</p>
@@ -2601,17 +2879,74 @@ export default function App() {
               <div className="flex items-center justify-between p-8 border-b border-brand-line">
                 <button 
                   onClick={() => setSelectedModuleId(null)}
-                  className="flex items-center gap-2 text-xs uppercase tracking-widest font-semibold opacity-60 hover:opacity-100 transition-opacity"
+                  className="flex items-center gap-2 text-xs uppercase tracking-widest font-semibold opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
                 >
                   <ChevronLeft size={16} /> Back
                 </button>
                 <button 
                   onClick={() => setSelectedModuleId(null)}
-                  className="w-10 h-10 flex items-center justify-center border border-brand-line rounded-full hover:bg-brand-ink hover:text-brand-bg transition-all"
+                  className="w-10 h-10 flex items-center justify-center border border-brand-line rounded-full hover:bg-brand-ink hover:text-brand-bg transition-all cursor-pointer"
                 >
                   <X size={20} />
                 </button>
               </div>
+
+              {/* Admin Mode Bar for Module */}
+              {isAdminMode && (
+                <div className="bg-amber-50 border-b border-amber-200 px-8 py-3 flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2.5 text-xs text-amber-950 font-medium">
+                    <Shield size={14} className="text-amber-700 shrink-0" />
+                    <span className="font-bold">Admin Module Control:</span>
+                    {(selectedModule.isLocked !== undefined ? selectedModule.isLocked : selectedModule.number >= 2) ? (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-200/90 text-amber-950 font-bold text-[10px] uppercase">
+                        <Lock size={10} /> Locked / Draft
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-200 text-emerald-950 font-bold text-[10px] uppercase">
+                        <Unlock size={10} /> Published
+                      </span>
+                    )}
+                    <span className="text-amber-800/70 hidden sm:inline">• Previewing full content</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => setEditingTarget({ type: 'module', module: selectedModule, course: null })}
+                      className="px-3 py-1.5 rounded-lg bg-amber-200 hover:bg-amber-300 text-amber-950 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer"
+                    >
+                      <Edit3 size={13} />
+                      <span>Edit Module Details</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const currentLocked = selectedModule.isLocked !== undefined ? selectedModule.isLocked : selectedModule.number >= 2;
+                        handleSaveModule({
+                          ...selectedModule,
+                          isLocked: !currentLocked
+                        });
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs ${
+                        (selectedModule.isLocked !== undefined ? selectedModule.isLocked : selectedModule.number >= 2)
+                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                          : 'bg-amber-800 hover:bg-amber-900 text-white'
+                      }`}
+                    >
+                      {(selectedModule.isLocked !== undefined ? selectedModule.isLocked : selectedModule.number >= 2) ? (
+                        <>
+                          <Unlock size={13} />
+                          <span>Publish Module</span>
+                        </>
+                      ) : (
+                        <>
+                          <Lock size={13} />
+                          <span>Lock as Draft</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Overlay Content */}
               <div className="flex-1 overflow-y-auto p-8 sm:p-12 relative z-10">
@@ -2743,12 +3078,29 @@ export default function App() {
                             {course.outcome && course.id !== "module-0-introduction" && (
                               <div className="mt-5 p-4 bg-brand-bg/40 rounded-xl border border-brand-line/60">
                                 <h5 className="text-[10px] font-bold uppercase tracking-wider text-brand-ink mb-1">Expected Outcome</h5>
-                                <p className="text-xs text-brand-ink/90 leading-relaxed font-light whitespace-pre-line space-y-1">{course.outcome}</p>
+                                {renderOutcomeBullets(course.outcome, "text-xs")}
                               </div>
                             )}
                           </div>
 
-                          <div className="mt-6 pt-5 border-t border-brand-line/60 flex items-center justify-end gap-4">
+                          <div className="mt-6 pt-5 border-t border-brand-line/60 flex items-center justify-between gap-4">
+                            {isAdminMode ? (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setEditingTarget({
+                                    type: 'chapter',
+                                    module: selectedModule,
+                                    course: course
+                                  });
+                                }}
+                                className="px-3 py-1.5 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-950 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer"
+                              >
+                                <Edit3 size={13} />
+                                <span>Edit Chapter</span>
+                              </button>
+                            ) : <div />}
                             <button 
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -2779,7 +3131,8 @@ export default function App() {
                       <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                         {curriculum.map((m) => {
                           const isCurrent = m.id === selectedModule.id;
-                          const isLocked = m.number >= 2;
+                          const isModuleLocked = m.isLocked !== undefined ? m.isLocked : m.number >= 2;
+                          const isLocked = !isAdminMode && isModuleLocked;
                           const { percent } = getModuleProgress(m);
                           return (
                             <button
@@ -2795,8 +3148,8 @@ export default function App() {
                               }`}
                             >
                               <span>Module {m.number}</span>
-                              {isLocked ? (
-                                <Lock size={12} className="text-slate-400" />
+                              {isModuleLocked ? (
+                                <Lock size={12} className={isAdminMode ? 'text-amber-600' : 'text-slate-400'} />
                               ) : percent > 0 ? (
                                 <span className={`w-1.5 h-1.5 rounded-full ${isCurrent ? 'bg-brand-bg' : 'bg-emerald-500'}`} title={`${percent}% done`} />
                               ) : null}
@@ -3454,6 +3807,23 @@ export default function App() {
                     </button>
                   </div>
 
+                  {/* Admin Edit Chapter button */}
+                  {isAdminMode && (
+                    <button
+                      type="button"
+                      onClick={() => setEditingTarget({
+                        type: 'chapter',
+                        module: activeChapterModule || curriculum.find(m => m.courses.some(c => c.id === activeChapter.id)) || null,
+                        course: activeChapter
+                      })}
+                      className="px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-950 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs active:scale-95"
+                      title="Edit this chapter's title, description, outcomes, playbooks, or discussion questions"
+                    >
+                      <Edit3 size={13} />
+                      <span className="inline">Edit Chapter</span>
+                    </button>
+                  )}
+
                   {/* Close button */}
                   <button
                     onClick={() => setSelectedChapterId(null)}
@@ -3589,9 +3959,41 @@ export default function App() {
         </div>
         <div className="max-w-6xl mx-auto mt-20 pt-8 border-t border-brand-bg/10 flex justify-between items-center text-[10px] uppercase tracking-widest opacity-30 relative z-10">
           <span>&copy; {new Date().getFullYear()} Quietly L&D</span>
+          <button
+            type="button"
+            onClick={() => {
+              if (isAdminMode) {
+                toggleAdminMode();
+              } else {
+                setShowAdminAuthModal(true);
+              }
+            }}
+            className="hover:opacity-100 transition-opacity underline cursor-pointer normal-case"
+          >
+            {isAdminMode ? 'Exit Admin Mode' : 'Staff Access'}
+          </button>
           <span>Property of Quietly Ltd.</span>
         </div>
       </footer>
+
+      {/* Admin Authentication Modal */}
+      <AdminAuthModal
+        isOpen={showAdminAuthModal}
+        onClose={() => setShowAdminAuthModal(false)}
+        onSuccess={handleAdminAuthSuccess}
+      />
+
+      {/* Admin Content Editor Modal */}
+      <AdminEditorModal
+        isOpen={!!editingTarget}
+        onClose={() => setEditingTarget(null)}
+        targetType={editingTarget?.type || 'module'}
+        targetModule={editingTarget?.module || null}
+        targetCourse={editingTarget?.course || null}
+        onSaveModule={handleSaveModule}
+        onSaveCourse={handleSaveCourse}
+        onResetToDefault={handleResetToDefault}
+      />
     </div>
   );
 }
