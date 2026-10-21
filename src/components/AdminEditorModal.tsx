@@ -167,7 +167,7 @@ export const AdminEditorModal: React.FC<AdminEditorModalProps> = ({
     ]);
   };
 
-  const handleUpdateDiscipline = (index: number, field: 'title' | 'description', val: string) => {
+  const handleUpdateDiscipline = (index: number, field: 'title' | 'description' | 'videoUrl', val: string) => {
     setCourseDisciplines(prev => {
       const next = [...prev];
       next[index] = { ...next[index], [field]: val };
@@ -345,6 +345,7 @@ export const AdminEditorModal: React.FC<AdminEditorModalProps> = ({
                     type="text"
                     value={modImageUrl}
                     onChange={e => setModImageUrl(e.target.value)}
+                    placeholder="https://images.unsplash.com/..."
                     className="w-full px-3.5 py-2 rounded-lg border border-brand-line bg-white focus:outline-none focus:ring-2 focus:ring-brand-ink/20 text-xs font-mono"
                   />
                 </div>
@@ -581,6 +582,14 @@ export const AdminEditorModal: React.FC<AdminEditorModalProps> = ({
                               onChange={e => handleUpdateDiscipline(idx, 'description', e.target.value)}
                               placeholder="Detailed guidance, workflows, pro-tips, and examples..."
                               className="w-full px-2.5 py-2 text-xs rounded border border-brand-line bg-white focus:outline-none focus:ring-1 focus:ring-brand-ink leading-relaxed"
+                            />
+
+                            <input 
+                              type="text"
+                              value={d.videoUrl || ''}
+                              onChange={e => handleUpdateDiscipline(idx, 'videoUrl', e.target.value)}
+                              placeholder="YouTube or presentation URL (optional)"
+                              className="w-full px-2.5 py-1.5 text-xs rounded border border-brand-line bg-white focus:outline-none focus:ring-1 focus:ring-brand-ink font-mono"
                             />
                           </div>
                         ))}

@@ -41,7 +41,8 @@ import {
   Shield,
   Edit3,
   Unlock,
-  Plus
+  Plus,
+  Film
 } from 'lucide-react';
 import { curriculum as initialCurriculum, Module, Course, Discipline } from './data';
 import { AdminEditorModal } from './components/AdminEditorModal';
@@ -100,6 +101,175 @@ function Chapter4VideoPlayer() {
           <ExternalLink size={16} className="text-slate-300 shrink-0" />
         </p>
       </a>
+    </div>
+  );
+}
+
+function Module2Chapter1SlideDeck() {
+  const slideDeckUrl = "https://docs.google.com/presentation/d/1rjbDJTuTh4JZp6-CEJ_bfqr6NY2MX74f8jYkZUMwzFk/edit?usp=sharing";
+  const embedSlideUrl = "https://docs.google.com/presentation/d/1rjbDJTuTh4JZp6-CEJ_bfqr6NY2MX74f8jYkZUMwzFk/embed?start=false&loop=false&delayms=3000";
+
+  return (
+    <div className="bg-slate-50 border border-brand-line/60 rounded-2xl p-5 sm:p-6 space-y-5 shadow-sm animate-fade-in text-brand-ink select-text">
+      <div className="flex items-center justify-between border-b border-brand-line/40 pb-4 flex-wrap gap-2">
+        <div className="space-y-1 max-w-2xl">
+          <h5 className="text-base sm:text-lg font-bold font-serif text-brand-ink tracking-tight flex items-center gap-2">
+            <Presentation size={18} className="text-indigo-600 shrink-0" />
+            <span>VIEW, Quietly's AI Messaging Guide: What we talk about when we talk about AI</span>
+          </h5>
+          <p className="text-xs text-brand-muted leading-relaxed font-light">
+            Access the complete slide presentation for Quietly's AI Messaging Guide: What we talk about when we talk about AI.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted bg-white px-2.5 py-1 rounded-md border border-brand-line/60">
+            Google Slides
+          </span>
+          <a
+            href={slideDeckUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-brand-ink bg-white hover:bg-slate-100 rounded-lg border border-brand-line transition-all shadow-xs"
+            title="Open in Google Slides"
+          >
+            <span>Open in Google Slides</span>
+            <ExternalLink size={13} />
+          </a>
+        </div>
+      </div>
+
+      <div className="relative aspect-video w-full rounded-xl bg-slate-900 border border-brand-line/80 overflow-hidden shadow-md">
+        <iframe
+          src={embedSlideUrl}
+          title="Quietly's AI Messaging Guide: What we talk about when we talk about AI"
+          className="w-full h-full border-0"
+          allowFullScreen
+        />
+      </div>
+
+      <div className="flex justify-end pt-1">
+        <a
+          href={slideDeckUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-ink text-brand-bg hover:bg-slate-800 font-semibold rounded-xl shadow-md transition-all cursor-pointer text-xs uppercase tracking-wider group"
+        >
+          <span>View Slide Deck</span>
+          <ExternalLink size={14} className="group-hover:translate-x-0.5 transition-transform" />
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function Chapter2AiHygieneVideoPlayer() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const directVideoUrl = "https://docs.google.com/videos/d/1JW5j3wqhbHHAWUDFvHNiiC3Lgdg1hlb5EtYiXQp_NA0/play";
+  const embedVideoUrl = "https://drive.google.com/file/d/1JW5j3wqhbHHAWUDFvHNiiC3Lgdg1hlb5EtYiXQp_NA0/preview";
+
+  return (
+    <div className="bg-slate-50 border border-brand-line/60 rounded-2xl p-5 sm:p-6 space-y-6 shadow-sm animate-fade-in text-brand-ink select-text">
+      <div className="flex items-center justify-between border-b border-brand-line/40 pb-4 flex-wrap gap-2">
+        <h5 className="text-base font-bold font-serif text-brand-ink tracking-tight flex items-center gap-2">
+          <Video size={18} className="text-indigo-600" />
+          <span>Watch: Chapter 2: Ai Hygiene & Prompting Best Practice</span>
+        </h5>
+        <a
+          href={directVideoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-brand-ink bg-white hover:bg-slate-100 rounded-lg border border-brand-line transition-all shadow-xs"
+          title="Open in Google Drive"
+        >
+          <span>Open in Google Drive</span>
+          <ExternalLink size={13} />
+        </a>
+      </div>
+
+      <div className="relative aspect-video w-full rounded-xl bg-slate-900 border border-brand-line/80 overflow-hidden shadow-md group">
+        {isPlaying ? (
+          <iframe
+            src={`${embedVideoUrl}?autoplay=1`}
+            title="Watch: Chapter 2: Ai Hygiene & Prompting Best Practice"
+            className="w-full h-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setIsPlaying(true)}
+            className="w-full h-full absolute inset-0 flex flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 text-white cursor-pointer hover:bg-slate-800/90 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 text-center"
+            aria-label="Play Watch: Chapter 2: Ai Hygiene & Prompting Best Practice video"
+          >
+            <div className="w-16 h-16 rounded-full bg-indigo-600 group-hover:bg-indigo-500 group-hover:scale-110 flex items-center justify-center shadow-lg transition-all duration-200 mb-4">
+              <Play size={28} className="text-white fill-white ml-1" />
+            </div>
+            <p className="text-base font-semibold tracking-tight text-slate-100 flex items-center gap-2">
+              <span>Watch: Chapter 2: Ai Hygiene & Prompting Best Practice</span>
+            </p>
+            <span className="text-xs text-indigo-300 font-mono uppercase tracking-wider mt-2 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-500/30">
+              Click to Play Video
+            </span>
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Module3ToolStackVideoPlayer() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const directVideoUrl = "https://docs.google.com/videos/d/1rzbDy2PFlVmvwQIPHdNAT2OSsuIBfa_n1Ty9AkD98wg/play";
+  const embedVideoUrl = "https://drive.google.com/file/d/1rzbDy2PFlVmvwQIPHdNAT2OSsuIBfa_n1Ty9AkD98wg/preview";
+
+  return (
+    <div className="bg-slate-50 border border-brand-line/60 rounded-2xl p-5 sm:p-6 space-y-6 shadow-sm animate-fade-in text-brand-ink select-text">
+      <div className="flex items-center justify-between border-b border-brand-line/40 pb-4 flex-wrap gap-2">
+        <h5 className="text-base font-bold font-serif text-brand-ink tracking-tight flex items-center gap-2">
+          <Video size={18} className="text-indigo-600" />
+          <span>Watch: Module 3: Quietly's Tool Stack</span>
+        </h5>
+        <a
+          href={directVideoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-brand-ink bg-white hover:bg-slate-100 rounded-lg border border-brand-line transition-all shadow-xs"
+          title="Open in Google Drive"
+        >
+          <span>Open in Google Drive</span>
+          <ExternalLink size={13} />
+        </a>
+      </div>
+
+      <div className="relative aspect-video w-full rounded-xl bg-slate-900 border border-brand-line/80 overflow-hidden shadow-md group">
+        {isPlaying ? (
+          <iframe
+            src={`${embedVideoUrl}?autoplay=1`}
+            title="Watch: Module 3: Quietly's Tool Stack"
+            className="w-full h-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setIsPlaying(true)}
+            className="w-full h-full absolute inset-0 flex flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 text-white cursor-pointer hover:bg-slate-800/90 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 text-center"
+            aria-label="Play Watch: Module 3: Quietly's Tool Stack video"
+          >
+            <div className="w-16 h-16 rounded-full bg-indigo-600 group-hover:bg-indigo-500 group-hover:scale-110 flex items-center justify-center shadow-lg transition-all duration-200 mb-4">
+              <Play size={28} className="text-white fill-white ml-1" />
+            </div>
+            <p className="text-base font-semibold tracking-tight text-slate-100 flex items-center gap-2">
+              <span>Watch: Module 3: Quietly's Tool Stack</span>
+            </p>
+            <span className="text-xs text-indigo-300 font-mono uppercase tracking-wider mt-2 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-500/30">
+              Click to Play Video
+            </span>
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -518,6 +688,7 @@ export default function App() {
   const [expandedCourseIds, setExpandedCourseIds] = useState<Record<string, boolean>>({});
   const [selectedDisciplineIds, setSelectedDisciplineIds] = useState<Record<string, string>>({});
   const [activeDiscipline, setActiveDiscipline] = useState<{ course: Course; discipline: any; index: number } | null>(null);
+  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [showQuizWarning, setShowQuizWarning] = useState(false);
   const [quizWarningDismissed, setQuizWarningDismissed] = useState(false);
@@ -608,16 +779,30 @@ export default function App() {
           return initialCurriculum.map(baseMod => {
             const savedMod = parsed.find((m: Module) => m.id === baseMod.id || m.number === baseMod.number);
             if (!savedMod) return baseMod;
+            const isModule3 = baseMod.id === 'applied-tool-stack';
+            const outcome = isModule3
+              ? (savedMod.outcome && !savedMod.outcome.includes('Master Quietly') ? savedMod.outcome : baseMod.outcome)
+              : (savedMod.outcome !== undefined ? savedMod.outcome : baseMod.outcome);
+            const quizForm = baseMod.quizFormUrl || savedMod.quizFormUrl;
             return {
               ...baseMod,
               ...savedMod,
+              outcome,
+              quizFormUrl: quizForm,
               courses: baseMod.courses.map(baseCourse => {
                 const savedCourse = savedMod.courses?.find((c: Course) => c.id === baseCourse.id);
                 if (!savedCourse) return baseCourse;
-                const slideDeck = (baseCourse.id === 'chapter-4-agency-vs-consultancy-mindset' && (!savedCourse.slideDeckUrl || savedCourse.slideDeckUrl.includes('How_Other_Agencies_Do_It.pdf')))
+                const slideDeck = ((baseCourse.id === 'chapter-4-agency-vs-consultancy-mindset' && (!savedCourse.slideDeckUrl || savedCourse.slideDeckUrl.includes('How_Other_Agencies_Do_It.pdf'))) || (baseCourse.id === 'bias-critical-thinking' && baseCourse.slideDeckUrl))
                   ? baseCourse.slideDeckUrl
                   : (savedCourse.slideDeckUrl || baseCourse.slideDeckUrl);
-                return { ...baseCourse, ...savedCourse, slideDeckUrl: slideDeck };
+                // For Module 3 Chapter 2, preserve updated initialCurriculum tool playbooks if savedCourse doesn't have videoList
+                const disciplines = (baseCourse.id === 'chapter-2-tool-specific-usage' && baseCourse.disciplines)
+                  ? baseCourse.disciplines
+                  : (baseCourse.id === 'chapter-3-work-stream-application'
+                    ? undefined
+                    : (savedCourse.disciplines || baseCourse.disciplines));
+                const googleVideo = baseCourse.googleVideoUrl || savedCourse.googleVideoUrl;
+                return { ...baseCourse, ...savedCourse, slideDeckUrl: slideDeck, googleVideoUrl: googleVideo, disciplines };
               })
             };
           });
@@ -631,6 +816,43 @@ export default function App() {
 
   // Alias for global usage across App
   const curriculum = curriculumData;
+
+  // Ensure Module 3 outcome is always in sync with canonical Expected Outcome
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('quietly_curriculum_custom');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          const mod3 = parsed.find((m: Module) => m.id === 'applied-tool-stack');
+          const targetOutcome = initialCurriculum.find(m => m.id === 'applied-tool-stack')?.outcome;
+          if (mod3 && targetOutcome && (!mod3.outcome || mod3.outcome.includes('Master Quietly') || mod3.outcome !== targetOutcome)) {
+            mod3.outcome = targetOutcome;
+            localStorage.setItem('quietly_curriculum_custom', JSON.stringify(parsed));
+            setCurriculumData(prev => prev.map(m => m.id === 'applied-tool-stack' ? { ...m, outcome: targetOutcome } : m));
+          }
+
+          // Ensure Module 2 course order matches canonical data
+          const mod2 = parsed.find((m: Module) => m.id === 'foundational-ai-philosophy');
+          const baseMod2 = initialCurriculum.find(m => m.id === 'foundational-ai-philosophy');
+          if (mod2 && baseMod2 && mod2.courses && baseMod2.courses) {
+            const canonicalOrder = baseMod2.courses.map(c => c.id);
+            const currentOrder = mod2.courses.map((c: Course) => c.id);
+            if (JSON.stringify(canonicalOrder) !== JSON.stringify(currentOrder)) {
+              mod2.courses = baseMod2.courses.map(bc => {
+                const sc = mod2.courses.find((c: Course) => c.id === bc.id);
+                return sc ? { ...bc, ...sc } : bc;
+              });
+              localStorage.setItem('quietly_curriculum_custom', JSON.stringify(parsed));
+              setCurriculumData(prev => prev.map(m => m.id === 'foundational-ai-philosophy' ? { ...m, courses: mod2.courses } : m));
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Failed to sync curriculum storage', e);
+    }
+  }, []);
 
   // Editing modal state
   const [editingTarget, setEditingTarget] = useState<{
@@ -844,6 +1066,7 @@ export default function App() {
 
   const handleSetActiveDiscipline = (data: { course: Course; discipline: any; index: number } | null) => {
     setActiveDiscipline(data);
+    setActiveVideoIndex(0);
     setHoveredNode(null);
     if (data && selectedModuleId) {
       setLastDisciplineByModule(prev => ({
@@ -1908,13 +2131,26 @@ export default function App() {
     if (lines.length === 0) return null;
     
     return (
-      <ul className="space-y-1.5 list-none my-1">
+      <ul className={`${textSize === 'text-sm' ? 'space-y-3.5' : 'space-y-2'} list-none my-1`}>
         {lines.map((line, idx) => {
           const cleanText = line.replace(/^[-*•–—]\s*/, '');
+          const colonIdx = cleanText.indexOf(':');
+          const hasPrefix = colonIdx > 0 && colonIdx < 100;
           return (
-            <li key={idx} className={`flex items-start gap-2 ${textSize} text-brand-ink/90 leading-relaxed font-light`}>
+            <li key={idx} className={`flex items-start gap-2.5 ${textSize} text-brand-ink/90 leading-relaxed font-light`}>
               <span className="text-brand-ink/60 select-none font-bold mt-0.5">•</span>
-              <span className="flex-1">{cleanText}</span>
+              <span className="flex-1">
+                {hasPrefix ? (
+                  <>
+                    <strong className="font-semibold text-brand-ink mr-1">
+                      {cleanText.slice(0, colonIdx + 1)}
+                    </strong>
+                    {cleanText.slice(colonIdx + 1).trimStart()}
+                  </>
+                ) : (
+                  cleanText
+                )}
+              </span>
             </li>
           );
         })}
@@ -1926,14 +2162,26 @@ export default function App() {
   const renderCourseContent = (course: Course) => {
     return (
       <div className="space-y-6">
-                                {course.outcome && course.id !== 'module-0-introduction' && (
-                                  <div className="p-6 bg-brand-bg/40 rounded-2xl border border-brand-line/60 my-2">
-                                    <h4 className="text-xs font-semibold uppercase tracking-wider mb-2 text-brand-ink">Expected Outcome</h4>
-                                    {renderOutcomeBullets(course.outcome, "text-sm")}
-                                  </div>
-                                )}
+        {course.id === 'bias-critical-thinking' && (
+          <Module2Chapter1SlideDeck />
+        )}
+
+        {course.outcome && course.id !== 'module-0-introduction' && (
+          <div className="p-6 bg-brand-bg/40 rounded-2xl border border-brand-line/60 my-2">
+            <h4 className="text-xs font-semibold uppercase tracking-wider mb-2 text-brand-ink">Expected Outcome</h4>
+            {renderOutcomeBullets(course.outcome, "text-sm")}
+          </div>
+        )}
+
+        {course.id === 'chapter-1-tools-by-design' && (
+          <Module3ToolStackVideoPlayer />
+        )}
+
+        {course.id === 'prompting-best-practices' && (
+          <Chapter2AiHygieneVideoPlayer />
+        )}
                                 
-                                {course.disciplines && course.disciplines.length > 0 && course.id !== 'module-0-introduction' && (
+                                {((course.disciplines && course.disciplines.length > 0) || (course.discussionQuestions && course.discussionQuestions.length > 0)) && course.id !== 'module-0-introduction' && (
                                   <div ref={disciplineSectionRef} className="p-6 sm:p-8 bg-brand-bg/25 rounded-2xl border border-brand-line/60 space-y-5 my-6">
                                     <div className="flex items-center gap-2">
                                       <HelpCircle size={18} className="text-brand-ink shrink-0" />
@@ -2013,7 +2261,7 @@ export default function App() {
                                   </motion.div>
                                 )}
                                 
-                                 {course.disciplines && course.disciplines.length > 0 && course.id !== 'chapter-3-b2b-stakeholder-archetypes' && (
+                                 {course.disciplines && course.disciplines.length > 0 && course.id !== 'chapter-3-b2b-stakeholder-archetypes' && course.id !== 'chapter-3-work-stream-application' && (
                                    course.id !== 'chapter-4-agency-vs-consultancy-mindset' ? (
                                     <div className="mt-6 pt-6 border-t border-brand-line/40 space-y-4">
                                       {course.id === 'module-0-introduction' ? (
@@ -2093,24 +2341,40 @@ export default function App() {
                                               <button
                                                 key={disc.id}
                                                 onClick={() => handleSetActiveDiscipline({ course, discipline: disc, index: dIdx })}
-                                                className="group text-left p-6 bg-brand-bg/25 hover:bg-brand-ink hover:text-brand-bg border border-brand-line hover:border-brand-ink rounded-2xl transition-all cursor-pointer flex flex-col justify-between h-40 focus:outline-none focus:ring-2 focus:ring-brand-ink/30"
+                                                className="group text-left p-6 bg-brand-bg/25 hover:bg-brand-ink hover:text-brand-bg border border-brand-line hover:border-brand-ink rounded-2xl transition-all cursor-pointer flex flex-col justify-between min-h-[190px] h-full focus:outline-none focus:ring-2 focus:ring-brand-ink/30 shadow-xs hover:shadow-md hover:-translate-y-0.5"
                                               >
-                                                <div className="space-y-2">
-                                                  <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-brand-ink group-hover:text-brand-bg/80 block">
-                                                    Topic 0{dIdx + 1}
-                                                  </span>
+                                                <div className="space-y-2.5">
+                                                  <div className="flex items-center justify-between gap-2">
+                                                    <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-brand-ink group-hover:text-brand-bg/80 block">
+                                                      Topic 0{dIdx + 1}
+                                                    </span>
+                                                    {disc.category && (
+                                                      <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-brand-ink/5 text-brand-ink/75 group-hover:bg-brand-bg/20 group-hover:text-brand-bg transition-colors line-clamp-1 max-w-[65%] text-right font-mono">
+                                                        {disc.category.split(',')[0]}
+                                                      </span>
+                                                    )}
+                                                  </div>
                                                   <h5 className="text-base font-semibold leading-snug group-hover:text-brand-bg">{disc.title}</h5>
+                                                  {(disc.coverage || (disc.researchQuestions && disc.researchQuestions.length > 0)) && (
+                                                    <p className="text-xs text-brand-muted group-hover:text-brand-bg/80 line-clamp-2 font-light leading-relaxed">
+                                                      {disc.coverage || disc.researchQuestions?.[0]}
+                                                    </p>
+                                                  )}
                                                 </div>
-                                                <div className="flex items-center gap-2 text-xs font-medium text-brand-ink group-hover:text-brand-bg mt-4">
+                                                <div className="flex items-center gap-2 text-xs font-medium text-brand-ink group-hover:text-brand-bg mt-4 pt-3 border-t border-brand-line/40 group-hover:border-brand-bg/20">
                                                   <span className="group-hover:opacity-100 flex items-center gap-1.5">
-                                                    {disc.videoUrl ? 'Watch Video Walkthrough' : 'Interactive View'}
-                                                    {disc.videoUrl ? (
+                                                    {disc.videoList && disc.videoList.length > 1
+                                                      ? `Watch Tutorial Series (${disc.videoList.length})`
+                                                      : (disc.videoUrl || (disc.videoList && disc.videoList.length > 0))
+                                                        ? 'Watch Video Walkthrough'
+                                                        : 'Interactive View'}
+                                                    {(disc.videoUrl || (disc.videoList && disc.videoList.length > 0)) ? (
                                                       <Video size={13} className="opacity-70 group-hover:opacity-100" />
                                                     ) : disc.graphicId ? (
                                                       <BookOpen size={13} className="opacity-70 group-hover:opacity-100" />
                                                     ) : null}
                                                   </span>
-                                                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                                                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform ml-auto" />
                                                 </div>
                                               </button>
                                             ))}
@@ -2121,7 +2385,7 @@ export default function App() {
                                   ) : null
                                 )}
 
-                                {course.disciplines && course.disciplines.length > 0 && course.id !== 'module-0-introduction' && course.id !== 'chapter-2-the-connective-tissue' && (
+                                {course.disciplines && course.disciplines.length > 0 && course.id !== 'module-0-introduction' && course.id !== 'chapter-2-the-connective-tissue' && (course.slideDeckUrl || course.podcastUrl || course.id === 'chapter-1-marketing-disciplines' || course.id === 'chapter-3-b2b-stakeholder-archetypes' || course.id === 'chapter-4-agency-vs-consultancy-mindset') && (
                                   <div className="mt-8 pt-8 border-t border-brand-line/40 space-y-4">
                                     {course.slideDeckUrl && (
                                       <div className="bg-slate-50 border border-brand-line/60 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm animate-fade-in text-brand-ink select-text mb-6">
@@ -2184,11 +2448,7 @@ export default function App() {
                                       </div>
                                     )}
 
-                                    {course.id !== 'chapter-4-agency-vs-consultancy-mindset' && (
-                                      <h4 className="text-xl sm:text-2xl font-serif text-brand-ink">
-                                        {course.id === 'chapter-1-marketing-disciplines' ? 'How content marketing fits in' : 'Key takeaways'}
-                                      </h4>
-                                    )}
+
                                     <div className="space-y-4 text-brand-ink text-sm sm:text-base leading-relaxed font-normal">
 
                                       {course.id === 'chapter-1-marketing-disciplines' && (
@@ -2252,11 +2512,7 @@ export default function App() {
 
                                 {course.disciplines && course.disciplines.length > 0 && course.id !== 'chapter-2-the-connective-tissue' && (
                                   <div className="mt-8 pt-8 border-t border-brand-line/40 space-y-4">
-                                    {course.id !== 'chapter-4-agency-vs-consultancy-mindset' && (
-                                      <h4 className="text-xl sm:text-2xl font-serif text-brand-ink">
-                                        Applying this to your day-to-day
-                                      </h4>
-                                    )}
+
 
                                     {course.id === 'chapter-1-marketing-disciplines' && (
                                       <ul className="space-y-4 text-brand-ink text-sm sm:text-base leading-relaxed font-normal list-none pl-0">
@@ -2373,6 +2629,20 @@ export default function App() {
                                         {topic}
                                       </span>
                                     ))}
+                                  </div>
+                                )}
+
+                                {(course.id === 'prompting-best-practices' || course.id === 'chapter-4-data-to-deliverables') && (
+                                  <div className="pt-6 mt-6 border-t border-brand-line/20 flex justify-center">
+                                    <a 
+                                      href={course.quizFormUrl || "https://docs.google.com/forms"}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="w-full sm:w-auto px-8 py-3.5 bg-brand-ink text-brand-bg rounded-xl font-medium flex items-center justify-center gap-2 hover:opacity-95 transition-opacity whitespace-nowrap cursor-pointer shadow-lg shadow-brand-ink/5"
+                                    >
+                                      <span>Click to Start Quiz!</span>
+                                      <HelpCircle size={16} />
+                                    </a>
                                   </div>
                                 )}
       </div>
@@ -3001,12 +3271,73 @@ export default function App() {
                       <h4 className="text-sm font-semibold uppercase tracking-wider mb-3 text-brand-ink">Purpose</h4>
                       <p className="leading-relaxed whitespace-pre-line">{selectedModule.purpose}</p>
                     </div>
+
+                    {(() => {
+                      const moduleOutcome = selectedModule.id === 'applied-tool-stack'
+                        ? (selectedModule.outcome && !selectedModule.outcome.includes('Master Quietly')
+                            ? selectedModule.outcome
+                            : initialCurriculum.find(m => m.id === 'applied-tool-stack')?.outcome || selectedModule.outcome)
+                        : selectedModule.outcome;
+                      if (!moduleOutcome) return null;
+                      return (
+                        <div className="p-6 bg-brand-bg/40 rounded-2xl border border-brand-line/60">
+                          <h4 className="text-xs font-semibold uppercase tracking-wider mb-2 text-brand-ink">Expected Outcome</h4>
+                          {renderOutcomeBullets(moduleOutcome, "text-sm")}
+                        </div>
+                      );
+                    })()}
+
+                    {(selectedModule.number === 3 || selectedModule.id === 'applied-tool-stack') && (
+                      <div className="pt-2">
+                        <motion.div 
+                          initial={{ opacity: 0, scale: 0.97, y: 15 }}
+                          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                          viewport={{ once: true, margin: "-50px" }}
+                          transition={{ duration: 0.5, ease: 'easeOut' }}
+                          className="p-6 bg-brand-ink text-brand-bg rounded-2xl border border-brand-line shadow-xl relative overflow-hidden group select-text"
+                        >
+                          <div className="space-y-3 relative z-10 select-text">
+                            <p className="text-sm sm:text-base leading-relaxed font-light text-brand-bg/95">
+                              Heads Up, You will be taking a 5 minute multiple choice quiz at the end of this module. Be sure to take notes as you progress.
+                            </p>
+                            <span className="text-xs font-bold tracking-widest uppercase opacity-60 inline-block mt-1">
+                              Now, let’s get into it…
+                            </span>
+                          </div>
+                          <div className="absolute right-[-20px] bottom-[-20px] opacity-10 text-brand-bg group-hover:scale-110 transition-transform duration-500 pointer-events-none">
+                            <HelpCircle size={100} />
+                          </div>
+                        </motion.div>
+                      </div>
+                    )}
+
                     {selectedModule.preface && (
                       <>
                         <hr className="border-brand-line" />
                         <div>
                           <h4 className="text-sm font-semibold uppercase tracking-wider mb-3 text-brand-ink">Preface</h4>
                           <p className="leading-relaxed italic">{selectedModule.preface}</p>
+                        </div>
+                        <div className="pt-2">
+                          <motion.div 
+                            initial={{ opacity: 0, scale: 0.97, y: 15 }}
+                            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{ duration: 0.5, ease: 'easeOut' }}
+                            className="p-6 bg-brand-ink text-brand-bg rounded-2xl border border-brand-line shadow-xl relative overflow-hidden group select-text"
+                          >
+                            <div className="space-y-3 relative z-10 select-text">
+                              <p className="text-sm sm:text-base leading-relaxed font-light text-brand-bg/95">
+                                Heads Up, You will be taking a 5 minute multiple choice quiz at the end of this module. Be sure to take notes as you progress.
+                              </p>
+                              <span className="text-xs font-bold tracking-widest uppercase opacity-60 inline-block mt-1">
+                                Now, let’s get into it…
+                              </span>
+                            </div>
+                            <div className="absolute right-[-20px] bottom-[-20px] opacity-10 text-brand-bg group-hover:scale-110 transition-transform duration-500 pointer-events-none">
+                              <HelpCircle size={100} />
+                            </div>
+                          </motion.div>
                         </div>
                       </>
                     )}
@@ -3045,7 +3376,7 @@ export default function App() {
                                     <span>{course.duration}</span>
                                   </span>
                                 )}
-                                {course.disciplines && course.disciplines.length > 0 && (() => {
+                                {course.disciplines && course.disciplines.length > 0 && course.id !== 'chapter-3-work-stream-application' && (() => {
                                   const { percent, completed, total } = getCourseProgress(course);
                                   return (
                                     <div className="flex items-center gap-2 px-3 py-1 bg-brand-bg rounded-lg border border-brand-line">
@@ -3116,6 +3447,21 @@ export default function App() {
                       );
                     })}
                   </div>
+
+                  {/* Click to start quiz button for Module 2 and Module 3 */}
+                  {(selectedModule.number === 2 || selectedModule.number === 3 || selectedModule.id === 'foundational-ai-philosophy' || selectedModule.id === 'applied-tool-stack') && (
+                    <div className="pt-8 mt-6 border-t border-brand-line/40 flex justify-center">
+                      <a
+                        href={selectedModule.quizFormUrl || "https://docs.google.com/forms"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full sm:w-auto px-8 py-3.5 bg-brand-ink text-brand-bg rounded-xl font-medium flex items-center justify-center gap-2 hover:opacity-95 transition-opacity whitespace-nowrap cursor-pointer shadow-lg shadow-brand-ink/5"
+                      >
+                        <span>Click to Start Quiz!</span>
+                        <HelpCircle size={16} />
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -3224,7 +3570,230 @@ export default function App() {
                     
                     <div className="h-px bg-gradient-to-r from-brand-line to-transparent w-full" />
                     
-                    {activeDiscipline.discipline.videoUrl ? (
+                    {activeDiscipline.discipline.videoList && activeDiscipline.discipline.videoList.length > 0 ? (
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mt-6">
+                        {/* Video Player + Playlist Column */}
+                        <div className="lg:col-span-7 space-y-5">
+                          {(() => {
+                            const currentVid = activeDiscipline.discipline.videoList[activeVideoIndex] || activeDiscipline.discipline.videoList[0];
+                            const isYouTube = currentVid.videoUrl?.includes('youtube.com') || currentVid.videoUrl?.includes('youtu.be');
+                            return (
+                              <div className="space-y-4">
+                                <div className="rounded-2xl overflow-hidden border border-brand-line aspect-video w-full bg-black/5 shadow-lg relative">
+                                  {isYouTube ? (
+                                    <iframe 
+                                      src={getYouTubeEmbedUrl(currentVid.videoUrl)}
+                                      title={currentVid.title}
+                                      className="w-full h-full border-0 absolute inset-0"
+                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                      allowFullScreen
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-brand-bg/40">
+                                      <Film size={40} className="text-brand-ink/40 mb-3" />
+                                      <p className="font-semibold text-brand-ink text-base mb-1">{currentVid.title}</p>
+                                      <p className="text-xs text-brand-muted max-w-sm mb-4">External training portal and interactive video modules</p>
+                                      <a
+                                        href={currentVid.videoUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-ink text-brand-bg text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-all"
+                                      >
+                                        Open Tutorial Library <ExternalLink size={14} />
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div className="space-y-4 pt-1">
+                                  {/* Video Title & Meta Bar */}
+                                  <div className="space-y-2">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      {(currentVid.category || activeDiscipline.discipline.category) && (
+                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 border border-indigo-200/70 text-indigo-900">
+                                          <Compass size={13} className="text-indigo-600 shrink-0" />
+                                          <span>{currentVid.category || activeDiscipline.discipline.category}</span>
+                                        </span>
+                                      )}
+                                      {currentVid.platform && (
+                                        <span className="text-[11px] font-mono text-brand-muted px-2.5 py-1 rounded-full bg-brand-bg border border-brand-line">
+                                          {currentVid.platform}
+                                        </span>
+                                      )}
+                                      {currentVid.durationNote && (
+                                        <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full bg-brand-bg border border-brand-line">
+                                          <Play size={10} className="text-brand-accent fill-current" />
+                                          {currentVid.durationNote}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <h4 className="text-xl font-bold font-serif text-brand-ink tracking-tight">
+                                      {currentVid.title}
+                                    </h4>
+                                  </div>
+
+                                  {/* Column E: What's Covered */}
+                                  {(currentVid.coverage || activeDiscipline.discipline.coverage) && (
+                                    <div className="bg-brand-bg/50 border border-brand-line/80 rounded-2xl p-4 sm:p-5 space-y-2 select-text">
+                                      <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-brand-muted">
+                                        <BookOpen size={14} className="text-brand-ink/80" />
+                                        <span>What’s Covered in this Tutorial</span>
+                                      </div>
+                                      <p className="text-xs sm:text-sm text-brand-ink font-light leading-relaxed">
+                                        {currentVid.coverage || activeDiscipline.discipline.coverage}
+                                      </p>
+                                    </div>
+                                  )}
+
+                                  {/* Column F: Key Research Questions Answered */}
+                                  {((currentVid.researchQuestions && currentVid.researchQuestions.length > 0) || 
+                                    (activeDiscipline.discipline.researchQuestions && activeDiscipline.discipline.researchQuestions.length > 0)) && (
+                                    <div className="bg-slate-50 border border-brand-line/80 rounded-2xl p-4 sm:p-5 space-y-3 select-text shadow-2xs">
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-brand-ink">
+                                          <HelpCircle size={14} className="text-brand-accent" />
+                                          <span>Key Research Questions Answered</span>
+                                        </div>
+                                        <span className="text-[10px] font-mono text-brand-muted px-2.5 py-0.5 rounded-full bg-white border border-brand-line/60">
+                                          {(currentVid.researchQuestions || activeDiscipline.discipline.researchQuestions)?.length} Core Questions
+                                        </span>
+                                      </div>
+                                      <div className="grid grid-cols-1 gap-2 pt-1">
+                                        {(currentVid.researchQuestions || activeDiscipline.discipline.researchQuestions)?.map((q: string, qIdx: number) => (
+                                          <div key={qIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-brand-ink font-light leading-relaxed">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-brand-accent mt-2 shrink-0" />
+                                            <span>{q}</span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Multi-video selector if > 1 tutorial */}
+                                  {activeDiscipline.discipline.videoList.length > 1 && (
+                                    <div className="pt-4 border-t border-brand-line/60 space-y-3">
+                                      <div className="flex items-center justify-between">
+                                        <p className="text-[11px] font-bold uppercase tracking-widest text-brand-muted flex items-center gap-2">
+                                          <Film size={12} />
+                                          Suite Tutorial Modules ({activeDiscipline.discipline.videoList.length})
+                                        </p>
+                                        <span className="text-[10px] text-brand-muted italic hidden sm:inline">Click to switch tutorial & research scope</span>
+                                      </div>
+                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                        {activeDiscipline.discipline.videoList.map((vid: any, vIdx: number) => {
+                                          const isSelected = vIdx === (activeVideoIndex || 0);
+                                          return (
+                                            <button
+                                              key={vid.videoUrl || vIdx}
+                                              onClick={() => setActiveVideoIndex(vIdx)}
+                                              className={`text-left p-3.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between gap-2 ${
+                                                isSelected
+                                                  ? 'bg-brand-ink text-brand-bg border-brand-ink shadow-sm'
+                                                  : 'bg-brand-bg/30 hover:bg-brand-bg/70 border-brand-line/70 text-brand-ink'
+                                              }`}
+                                            >
+                                              <div className="flex items-start justify-between gap-2">
+                                                <span className={`text-[10px] font-mono uppercase font-bold tracking-wider ${isSelected ? 'text-brand-bg/70' : 'text-brand-muted'}`}>
+                                                  Part 0{vIdx + 1}
+                                                </span>
+                                                {vid.durationNote && (
+                                                  <span className={`text-[10px] font-mono ${isSelected ? 'text-brand-bg/80' : 'text-brand-muted'}`}>
+                                                    {vid.durationNote.split('—')[0].trim()}
+                                                  </span>
+                                                )}
+                                              </div>
+                                              <p className="text-xs font-semibold leading-snug line-clamp-1">
+                                                {vid.title}
+                                              </p>
+                                              {vid.category && (
+                                                <span className={`text-[9px] font-mono truncate px-1.5 py-0.5 rounded ${isSelected ? 'bg-brand-bg/20 text-brand-bg/90' : 'bg-brand-ink/5 text-brand-muted'}`}>
+                                                  {vid.category.split(',')[0]}
+                                                </span>
+                                              )}
+                                            </button>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })()}
+                        </div>
+                        
+                        {/* Right Column: Tactical Playbook & Delivery Roles */}
+                        <div className="lg:col-span-5 space-y-6">
+                          {/* Tactical Playbook */}
+                          <div className="bg-brand-bg/30 border border-brand-line/70 rounded-2xl p-6 space-y-4">
+                            <div className="flex items-center justify-between border-b border-brand-line/40 pb-3">
+                              <h4 className="text-sm font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2">
+                                <Zap size={14} className="text-brand-accent" />
+                                <span>Tactical Playbook & Guidance</span>
+                              </h4>
+                              <span className="text-[10px] uppercase tracking-widest font-mono text-brand-muted">
+                                Quietly Practice
+                              </span>
+                            </div>
+                            <div className="prose prose-stone max-w-none text-brand-ink text-xs sm:text-sm leading-relaxed whitespace-pre-line font-light select-text">
+                              {activeDiscipline.discipline.description}
+                            </div>
+                          </div>
+
+                          {/* Role Delivery Application */}
+                          {(() => {
+                            const currentVid = activeDiscipline.discipline.videoList?.[activeVideoIndex] || activeDiscipline.discipline.videoList?.[0] || activeDiscipline.discipline;
+                            const roleTakeaways = currentVid.roleTakeaways || activeDiscipline.discipline.roleTakeaways;
+                            if (!roleTakeaways) return null;
+                            return (
+                              <div className="bg-slate-50 border border-brand-line/70 rounded-2xl p-6 space-y-4 shadow-2xs">
+                                <div className="flex items-center justify-between border-b border-brand-line/40 pb-3">
+                                  <h4 className="text-sm font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2">
+                                    <Layers size={14} className="text-indigo-600" />
+                                    <span>Role Delivery Application</span>
+                                  </h4>
+                                  <span className="text-[10px] uppercase tracking-widest font-mono text-brand-muted">
+                                    Workflow Lenses
+                                  </span>
+                                </div>
+                                <div className="space-y-3">
+                                  {roleTakeaways.strategist && (
+                                    <div className="p-3.5 bg-white rounded-xl border border-brand-line/50 space-y-1">
+                                      <span className="text-[10px] font-bold text-indigo-900 uppercase tracking-wider block">
+                                        Strategist Lens
+                                      </span>
+                                      <p className="text-xs text-brand-muted font-light leading-relaxed whitespace-pre-line">
+                                        {roleTakeaways.strategist}
+                                      </p>
+                                    </div>
+                                  )}
+                                  {roleTakeaways.contentLead && (
+                                    <div className="p-3.5 bg-white rounded-xl border border-brand-line/50 space-y-1">
+                                      <span className="text-[10px] font-bold text-emerald-900 uppercase tracking-wider block">
+                                        Content Lead Lens
+                                      </span>
+                                      <p className="text-xs text-brand-muted font-light leading-relaxed whitespace-pre-line">
+                                        {roleTakeaways.contentLead}
+                                      </p>
+                                    </div>
+                                  )}
+                                  {roleTakeaways.clientPartner && (
+                                    <div className="p-3.5 bg-white rounded-xl border border-brand-line/50 space-y-1">
+                                      <span className="text-[10px] font-bold text-amber-900 uppercase tracking-wider block">
+                                        Client Partner Lens
+                                      </span>
+                                      <p className="text-xs text-brand-muted font-light leading-relaxed whitespace-pre-line">
+                                        {roleTakeaways.clientPartner}
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })()}
+                        </div>
+                      </div>
+                    ) : activeDiscipline.discipline.videoUrl ? (
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mt-6">
                         {/* Video player Column */}
                         <div className="lg:col-span-7 space-y-4">
@@ -3854,7 +4423,7 @@ export default function App() {
                         <span>Time Required: {activeChapter.duration}</span>
                       </span>
                     )}
-                    {activeChapter.disciplines && activeChapter.disciplines.length > 0 && (() => {
+                    {activeChapter.disciplines && activeChapter.disciplines.length > 0 && activeChapter.id !== 'chapter-3-work-stream-application' && (() => {
                       const { percent, completed, total } = getCourseProgress(activeChapter);
                       return (
                         <div className="flex items-center gap-2 px-3 py-1 bg-brand-bg rounded-lg border border-brand-line">

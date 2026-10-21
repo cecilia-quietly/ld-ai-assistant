@@ -3,12 +3,36 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+export interface DisciplineVideo {
+  title: string;
+  videoUrl: string;
+  durationNote?: string;
+  platform?: string;
+  coverage?: string;
+  researchQuestions?: string[];
+  category?: string;
+  roleTakeaways?: {
+    strategist?: string;
+    contentLead?: string;
+    clientPartner?: string;
+  };
+}
+
 export interface Discipline {
   id: string;
   title: string;
   description: string;
   videoUrl?: string;
+  videoList?: DisciplineVideo[];
   graphicId?: string;
+  category?: string;
+  coverage?: string;
+  researchQuestions?: string[];
+  roleTakeaways?: {
+    strategist?: string;
+    contentLead?: string;
+    clientPartner?: string;
+  };
 }
 
 export interface Course {
@@ -19,12 +43,14 @@ export interface Course {
   subtopics?: string[];
   format?: 'video' | 'podcast' | 'quiz' | 'document' | 'interactive';
   videoUrl?: string;
+  googleVideoUrl?: string;
   podcastUrl?: string;
   podcastTitle?: string;
   slideDeckUrl?: string;
   disciplines?: Discipline[];
   outcome?: string;
   discussionQuestions?: string[];
+  quizFormUrl?: string;
 }
 
 export interface Module {
@@ -41,6 +67,7 @@ export interface Module {
   accentColor: string;
   imageUrl: string;
   outcome?: string;
+  quizFormUrl?: string;
 }
 
 export const curriculum: Module[] = [
@@ -305,18 +332,20 @@ export const curriculum: Module[] = [
     preface: 'Philosophy: Understanding "the forest from the trees" and how to benefit from AI’s thoughts rather than just its output.',
     accentColor: '#319795',
     imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800',
+    quizFormUrl: 'https://docs.google.com/forms',
     courses: [
+      {
+        id: 'bias-critical-thinking',
+        title: 'Bias & Critical Thinking',
+        description: 'How to remove bias from prompts to get better, more objective responses.',
+        format: 'quiz',
+        slideDeckUrl: 'https://docs.google.com/presentation/d/1rjbDJTuTh4JZp6-CEJ_bfqr6NY2MX74f8jYkZUMwzFk/edit?usp=sharing'
+      },
       {
         id: 'prompting-best-practices',
         title: 'Prompting Best Practices',
         description: 'Moving from simple search-bar queries to chain-of-reasoning methodologies. Includes a Prompt Library for successful Gemini prompts.',
         format: 'interactive'
-      },
-      {
-        id: 'bias-critical-thinking',
-        title: 'Bias & Critical Thinking',
-        description: 'How to remove bias from prompts to get better, more objective responses.',
-        format: 'quiz'
       }
     ]
   },
@@ -328,9 +357,14 @@ export const curriculum: Module[] = [
     duration: 'Approx. 1.5 hours',
     isLocked: true,
     purpose: 'To standardize how we use data and synthesis tools across different departments, aligning raw research outputs with strategic intent and high-impact client deliverables.',
-    outcome: '• Master Quietly’s 5 core tool pillars: Social listening, search intelligence, competitive benchmarking, syndicated research, and first-party analytics.\n• Transition seamlessly from raw data exports to actionable insights, creative concepts, and executive presentation decks.\n• Establish shared cross-functional taxonomy between Content Leads, Strategists, and Client Partners.',
+    outcome: `• Articulate common “types” of research (tools): Describe the common areas of research Quietly conducts, and examples of the tools used to facilitate that research.
+
+• Understand basic application of tools across common use cases: Establish a working understanding of each tool, and able to apply it across the common task types noted.
+
+• Distinguish between role-specific use cases of each tool: Identify and apply each tool in service of role-specific needs.`,
     accentColor: '#2C5282',
     imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
+    quizFormUrl: 'https://docs.google.com/forms',
     courses: [
       {
         id: 'chapter-1-tools-by-design',
@@ -338,6 +372,8 @@ export const curriculum: Module[] = [
         description: 'A structured decision framework matching specific client inquiries to the ideal research methodology. We will deconstruct the "Which Tool? Cheat Sheet" to navigate social listening, keyword architecture, competitive intelligence, subscription panels, and first-party analytics.',
         duration: '30 mins',
         format: 'interactive',
+        slideDeckUrl: 'https://docs.google.com/presentation/d/13cWfwpWmZD8Ic6aGnw1b7lWeea58NDsOxU02LqiHOE0/edit?slide=id.h1151ba94adef2dc9_1_128#slide=id.h1151ba94adef2dc9_1_128',
+        googleVideoUrl: 'https://docs.google.com/videos/d/1rzbDy2PFlVmvwQIPHdNAT2OSsuIBfa_n1Ty9AkD98wg/play',
         outcome: '• Navigate the 5 primary research tool categories with precision and confidence.\n• Formulate sharp, testable hypotheses before pulling raw data from specialized platforms.\n• Select the optimal tool combination based on turnaround time, sample fidelity, and commercial objectives.',
         discussionQuestions: [
           "Before pulling data from a tool, how do you formulate the exact business hypothesis you are testing?",
@@ -390,29 +426,333 @@ export const curriculum: Module[] = [
         ],
         disciplines: [
           {
-            id: 'usage-semrush',
-            title: 'SEMrush: Keyword Gap & Content Architecture',
-            description: 'Using the Keyword Gap tool to identify competitor ranking vulnerabilities where Quietly clients can win quick organic wins.\n\nWorkflow: Compare client domain against top 3 direct competitors, filter by "Untapped" and "Weak", sort by search intent to build immediate editorial clusters.\n\nPro-Tip: Always check SERP volatility and current snippet ownership before prioritizing high-volume keywords.'
-          },
-          {
-            id: 'usage-buzzsumo',
-            title: 'BuzzSumo: Content Resonance & Viral Outliers',
-            description: 'Analyzing which headlines, formats (listicles, guides, interviews), and word counts generated disproportionate social engagement over the past 12 months.\n\nWorkflow: Search core industry keywords, review top 100 performing articles by network shares, and extract the recurring headline hooks and content structures.\n\nPro-Tip: Use Evergreen Score to isolate enduring content assets from temporary viral spikes.'
+            id: 'usage-google-suite',
+            title: 'Google Search & Analytics Suite',
+            category: 'Organic Search, Trends & Behavioral Analytics',
+            coverage: 'Comprehensive platform walkthroughs spanning Google Search Console, Google Trends, Google Keyword Planner, and Google Analytics 4 (Reports & Explorations).',
+            researchQuestions: [
+              'What are people searching for and what terms should we target?',
+              'Which pages get found on Google and which need improving?',
+              'How many people visit, where do they come from, and what do they do?'
+            ],
+            description: "Comprehensive tutorials covering Google's official intelligence ecosystem: Google Search Console, Google Trends, Google Keyword Planner, and Google Analytics 4 (Reports & Free Form Explorations).\n\nUse this unified playbook to master indexing, search intent shifts, keyword forecasting, audience acquisition, and custom behavioral reporting.",
+            videoUrl: 'https://www.youtube.com/watch?v=iB7_i4giItw',
+            videoList: [
+              {
+                title: 'Google Search Console Tutorial 2025',
+                videoUrl: 'https://www.youtube.com/watch?v=iB7_i4giItw',
+                durationNote: '39:16 — watch 1:36–11:00',
+                platform: 'YouTube',
+                category: 'Organic Search Performance, Visibility',
+                coverage: 'Platform walkthrough: Performance, queries/pages, filters, indexing, sitemaps, links, and keyword research.',
+                researchQuestions: [
+                  'What are people searching for?',
+                  'Which pages get found on Google?',
+                  'Which pages need improving?'
+                ],
+                roleTakeaways: {
+                  strategist: 'SEO opportunities • Diagnose visibility changes • Inform search reporting',
+                  contentLead: 'Refresh underperforming pages • Find audience language • Identify visible topics',
+                  clientPartner: 'Explain organic performance • Track client visibility • Surface indexing issues'
+                }
+              },
+              {
+                title: 'How to Use Google Trends',
+                videoUrl: 'https://www.youtube.com/watch?v=IlEo_T17Ljs',
+                durationNote: '10:35 — watch through 6:00',
+                platform: 'YouTube',
+                category: 'Market Demand, Search Trends',
+                coverage: 'Comparing topics, seasonality, filters, locations, and related searches for content research.',
+                researchQuestions: [
+                  'Is this topic popular?',
+                  'Is interest growing?',
+                  'What related topics are trending?'
+                ],
+                roleTakeaways: {
+                  strategist: 'Time campaigns around demand • Validate market trends',
+                  contentLead: 'Find related topics and seasonal content angles',
+                  clientPartner: 'Bring trend evidence to clients • Monitor category interest'
+                }
+              },
+              {
+                title: 'Google Keyword Planner Tutorial 2026',
+                videoUrl: 'https://www.youtube.com/watch?v=J54VY4e8nDo',
+                durationNote: '17:39',
+                platform: 'YouTube',
+                category: 'Keyword, Search Volume Research',
+                coverage: 'Navigating Keyword Planner, discovering ideas, assessing volume/competition, and choosing terms.',
+                researchQuestions: [
+                  'What keywords do people use?',
+                  'How often are these terms searched?',
+                  'What related keywords should we use?'
+                ],
+                roleTakeaways: {
+                  strategist: 'Size search opportunities • Build paid and organic plans • Compare market language',
+                  contentLead: 'Build topic lists • Select primary terms • Find brief-worthy variants',
+                  clientPartner: 'Support paid-search discussions • Explain keyword rationale • Estimate competitive themes'
+                }
+              },
+              {
+                title: 'GA4 — Reports: Get Started with GA4 Reports',
+                videoUrl: 'https://www.youtube.com/watch?v=XEwUtEe_ogY',
+                durationNote: '14:03 — watch 0:55–9:30',
+                platform: 'YouTube',
+                category: 'Web Traffic, Channel Performance',
+                coverage: 'Navigating and using the standard acquisition, engagement, demographic, and technology reports.',
+                researchQuestions: [
+                  'How many people visit our site?',
+                  'Which pages do they visit?',
+                  'Where do they come from?'
+                ],
+                roleTakeaways: {
+                  strategist: 'Evaluate channel performance • Identify audience patterns • Inform traffic engagement reports',
+                  contentLead: 'Identify strong content • See how readers engage • Find pages to update',
+                  clientPartner: 'Prepare performance updates • Explain traffic results • Connect work to key events'
+                }
+              },
+              {
+                title: 'GA4 — Explorations: Free Form Exploration in Google Analytics 4',
+                videoUrl: 'https://www.youtube.com/watch?v=UgKEjIq_L_g',
+                durationNote: '20:45 — watch through 8:05',
+                platform: 'YouTube',
+                category: 'User Behavior, Journey Analysis',
+                coverage: 'Navigating Explore, understanding variables/settings, and building a basic free-form exploration.',
+                researchQuestions: [
+                  'What do visitors do on our site?',
+                  'Where do they leave?',
+                  'How do different audiences behave?'
+                ],
+                roleTakeaways: {
+                  strategist: 'Investigate questions standard reports cannot answer • Analyze journeys',
+                  contentLead: 'Analyze reader paths • Compare engagement • Find internal-linking opportunities',
+                  clientPartner: 'Answer client-specific questions • Create focused analyses • Explain journey insights'
+                }
+              }
+            ]
           },
           {
             id: 'usage-similarweb',
-            title: 'Similarweb: Traffic Source Deconstruction',
-            description: 'Mapping competitor digital marketing channels to determine where their traffic originates: direct, organic search, paid search, social, or display.\n\nWorkflow: Benchmark traffic shares over a 6-month trailing window, identify surge periods, and isolate which specific referral publishers drive conversion-ready traffic.\n\nPro-Tip: Examine device split (mobile vs desktop) to guide content format requirements.'
+            title: 'Similarweb',
+            category: 'Competitor Intelligence, Traffic Benchmarking',
+            coverage: 'Website Analysis for traffic, audience, and competitor research.',
+            researchQuestions: [
+              'Who are our competitors?',
+              'Where does competitor traffic come from?',
+              'What content performs well for them?'
+            ],
+            roleTakeaways: {
+              strategist: 'Benchmark markets and competitors • Identify channel opportunities',
+              contentLead: 'Find competitor formats and topics • Identify popular site sections • Research referrals and search',
+              clientPartner: 'Prepare competitor snapshots • Add context to reports • Explain market position'
+            },
+            description: `Website Analysis for traffic, audience, and competitor research.
+
+Mapping competitor digital marketing channels to determine where their traffic originates: direct, organic search, paid search, social, or display.
+
+Workflow: Benchmark traffic shares over a 6-month trailing window, identify surge periods, and isolate which specific referral publishers drive conversion-ready traffic.
+
+Pro-Tip: Examine device split (mobile vs desktop) to guide content format requirements.`,
+            videoUrl: 'https://www.youtube.com/watch?v=18LPb1tRuqA',
+            videoList: [
+              {
+                title: 'Getting Started: Website Analysis',
+                videoUrl: 'https://www.youtube.com/watch?v=18LPb1tRuqA',
+                durationNote: '4:25',
+                platform: 'Official Similarweb YouTube',
+                category: 'Competitor Intelligence, Traffic Benchmarking',
+                coverage: 'Website Analysis for traffic, audience, and competitor research.',
+                researchQuestions: [
+                  'Who are our competitors?',
+                  'Where does competitor traffic come from?',
+                  'What content performs well for them?'
+                ],
+                roleTakeaways: {
+                  strategist: 'Benchmark markets and competitors • Identify channel opportunities',
+                  contentLead: 'Find competitor formats and topics • Identify popular site sections • Research referrals and search',
+                  clientPartner: 'Prepare competitor snapshots • Add context to reports • Explain market position'
+                }
+              }
+            ]
+          },
+          {
+            id: 'usage-keywordtool',
+            title: 'KeywordTool.io',
+            category: 'Audience Search Intent',
+            coverage: 'Provider-made keyword-discovery workflow; YouTube-focused but applicable to the tool’s other search tabs.',
+            researchQuestions: [
+              'What questions do people ask?',
+              'What related terms do people search?',
+              'What ideas could we cover?'
+            ],
+            roleTakeaways: {
+              strategist: 'Expand audience-language research • Compare cross-platform demand • Find niche opportunities',
+              contentLead: 'Generate blog, video, and FAQ ideas • Build keyword lists • Discover question-led angles',
+              clientPartner: 'Turn client topics into ideas • Show audience language'
+            },
+            description: `Discover hidden keyword opportunities and long-tail query volumes across YouTube, Google, and specialized search engines.
+
+Provider-made keyword-discovery workflow; YouTube-focused but directly applicable to the tool’s other search tabs and topic clusters.
+
+Workflow: Search core seed terms, toggle to the Questions tab to find customer pain points, and filter by prepositions to generate high-intent editorial clusters.
+
+Pro-Tip: Compare YouTube search volume with Google Web search volume to spot content format mismatches.`,
+            videoUrl: 'https://www.youtube.com/watch?v=g7TrG0DAc8w',
+            videoList: [
+              {
+                title: 'Discover Hidden Keyword Opportunities for YouTube with Keyword Tool',
+                videoUrl: 'https://www.youtube.com/watch?v=g7TrG0DAc8w',
+                durationNote: '10:40',
+                platform: 'Official Keyword Tool YouTube',
+                category: 'Audience Search Intent',
+                coverage: 'Provider-made keyword-discovery workflow; YouTube-focused but applicable to the tool’s other search tabs.',
+                researchQuestions: [
+                  'What questions do people ask?',
+                  'What related terms do people search?',
+                  'What ideas could we cover?'
+                ],
+                roleTakeaways: {
+                  strategist: 'Expand audience-language research • Compare cross-platform demand • Find niche opportunities',
+                  contentLead: 'Generate blog, video, and FAQ ideas • Build keyword lists • Discover question-led angles',
+                  clientPartner: 'Turn client topics into ideas • Show audience language'
+                }
+              }
+            ]
+          },
+          {
+            id: 'usage-semrush',
+            title: 'Semrush',
+            category: 'SEO Opportunities, Keyword Research, Prompt Research',
+            coverage: 'Finding keyword opportunities and selecting content topics using Semrush.',
+            researchQuestions: [
+              'What keywords should we target?',
+              'What do competitors rank for?',
+              'What topics are we missing?',
+              'What are people prompting?'
+            ],
+            roleTakeaways: {
+              strategist: 'Set search priorities • Compare market visibility • Identify SEO gaps',
+              contentLead: 'Research article keywords • Find supporting terms • Select opportunities by intent',
+              clientPartner: 'Explain recommendations • Report on keyword gaps • Support SEO roadmaps'
+            },
+            description: `Finding keyword opportunities and selecting content topics using Semrush.
+
+Using the Keyword Gap tool to identify competitor ranking vulnerabilities where Quietly clients can achieve rapid organic wins.
+
+Workflow: Compare client domain against top 3 direct competitors, filter by "Untapped" and "Weak", sort by search intent to build immediate editorial clusters.
+
+Pro-Tip: Always check SERP volatility and current snippet ownership before prioritizing high-volume keywords.`,
+            videoUrl: 'https://www.youtube.com/watch?v=xHu5pFhbHn4',
+            videoList: [
+              {
+                title: 'Semrush Tutorial for Beginners: Keyword Research',
+                videoUrl: 'https://www.youtube.com/watch?v=xHu5pFhbHn4',
+                durationNote: '12:33',
+                platform: 'Official Semrush YouTube',
+                category: 'SEO Opportunities, Keyword Research, Prompt Research',
+                coverage: 'Finding keyword opportunities and selecting content topics using Semrush.',
+                researchQuestions: [
+                  'What keywords should we target?',
+                  'What do competitors rank for?',
+                  'What topics are we missing?',
+                  'What are people prompting?'
+                ],
+                roleTakeaways: {
+                  strategist: 'Set search priorities • Compare market visibility • Identify SEO gaps',
+                  contentLead: 'Research article keywords • Find supporting terms • Select opportunities by intent',
+                  clientPartner: 'Explain recommendations • Report on keyword gaps • Support SEO roadmaps'
+                }
+              }
+            ]
+          },
+          {
+            id: 'usage-buzzsumo',
+            title: 'BuzzSumo',
+            category: 'Social Listening, Content Engagement',
+            coverage: 'Brief platform orientation and content-research use cases.',
+            researchQuestions: [
+              'What content gets attention?',
+              'What headlines work well?',
+              'What topics are popular?'
+            ],
+            roleTakeaways: {
+              strategist: 'Identify content patterns • Inform outreach strategy',
+              contentLead: 'Find headline ideas • Research trending themes • Identify content gaps',
+              clientPartner: 'Support recommendations • Find media opportunities • Share engagement evidence'
+            },
+            description: `Brief platform orientation and content-research use cases.
+
+Analyzing which headlines, formats (listicles, guides, interviews), and word counts generated disproportionate social engagement over the past 12 months.
+
+Workflow: Search core industry keywords, review top 100 performing articles by network shares, and extract recurring headline hooks and content structures.
+
+Pro-Tip: Use Evergreen Score to isolate enduring content assets from temporary viral spikes.`,
+            videoUrl: 'https://www.youtube.com/watch?v=rZbtJxzErq0',
+            videoList: [
+              {
+                title: 'What Is BuzzSumo?',
+                videoUrl: 'https://www.youtube.com/watch?v=rZbtJxzErq0',
+                durationNote: '3:22 — start at 0:55',
+                platform: 'Official BuzzSumo YouTube',
+                category: 'Social Listening, Content Engagement',
+                coverage: 'Brief platform orientation and content-research use cases.',
+                researchQuestions: [
+                  'What content gets attention?',
+                  'What headlines work well?',
+                  'What topics are popular?'
+                ],
+                roleTakeaways: {
+                  strategist: 'Identify content patterns • Inform outreach strategy',
+                  contentLead: 'Find headline ideas • Research trending themes • Identify content gaps',
+                  clientPartner: 'Support recommendations • Find media opportunities • Share engagement evidence'
+                }
+              }
+            ]
           },
           {
             id: 'usage-vidiq',
-            title: 'vidIQ: YouTube Optimization & Search Velocity',
-            description: 'Demystifying YouTube algorithm dynamics to maximize discoverability and audience retention for branded video series.\n\nWorkflow: Audit video tags against high-volume YouTube search queries, track Views Per Hour (VPH) velocity, and analyze competitor thumbnail composition.\n\nPro-Tip: Optimize the first 120 characters of video descriptions to appear in preview snippets.'
-          },
-          {
-            id: 'usage-gwi',
-            title: 'GWI: Deep Persona Crosstabs & Psychographics',
-            description: 'Generating statistically validated audience insights that go beyond basic age and geography to uncover motivations, attitudes, and brand perceptions.\n\nWorkflow: Build custom audience segments, cross-tabulate media touchpoints, and filter for index scores > 120 to highlight distinct demographic preferences.\n\nPro-Tip: Pair GWI quantitative data with live social listening quotes to bring persona slides to life.'
+            title: 'vidIQ',
+            category: 'Video Strategy, YouTube SEO',
+            coverage: 'Current platform walkthrough: navigation, idea and keyword research, optimization, and growth tools.',
+            researchQuestions: [
+              'Which YouTube topics have demand?',
+              'Which videos outperform in a niche?',
+              'Which keywords belong in a title or description?',
+              'How is a channel performing?'
+            ],
+            roleTakeaways: {
+              strategist: 'Build YouTube strategies • Research competitors • Optimize metadata',
+              contentLead: 'Research video topics • Identify strong formats',
+              clientPartner: 'Report on channel opportunity • Support video recommendations • Prepare channel snapshots'
+            },
+            description: `Current platform walkthrough: navigation, idea and keyword research, optimization, and growth tools.
+
+Demystifying YouTube algorithm dynamics to maximize discoverability and audience retention for branded video series.
+
+Workflow: Audit video tags against high-volume YouTube search queries, track Views Per Hour (VPH) velocity, and analyze competitor thumbnail composition.
+
+Pro-Tip: Optimize the first 120 characters of video descriptions to appear in preview snippets.`,
+            videoUrl: 'https://www.youtube.com/watch?v=oTsIa7hxnzc',
+            videoList: [
+              {
+                title: 'How To Grow Your YouTube Channel Using vidIQ in 2026',
+                videoUrl: 'https://www.youtube.com/watch?v=oTsIa7hxnzc',
+                durationNote: 'watch from 12:30',
+                platform: 'Official vidIQ YouTube',
+                category: 'Video Strategy, YouTube SEO',
+                coverage: 'Current platform walkthrough: navigation, idea and keyword research, optimization, and growth tools.',
+                researchQuestions: [
+                  'Which YouTube topics have demand?',
+                  'Which videos outperform in a niche?',
+                  'Which keywords belong in a title or description?',
+                  'How is a channel performing?'
+                ],
+                roleTakeaways: {
+                  strategist: 'Build YouTube strategies • Research competitors • Optimize metadata',
+                  contentLead: 'Research video topics • Identify strong formats',
+                  clientPartner: 'Report on channel opportunity • Support video recommendations • Prepare channel snapshots'
+                }
+              }
+            ]
           }
         ]
       },
@@ -422,35 +762,16 @@ export const curriculum: Module[] = [
         description: 'Connecting raw tool outputs to daily client deliverables. Examine how Content Leads, Brand Strategists, and Account Directors interpret the same data differently to drive creative briefs, editorial calendars, competitive audits, and C-suite commercial buy-in.',
         duration: '25 mins',
         format: 'interactive',
-        outcome: '• Understand the distinct operational lenses of Strategists, Content Leads, and Client Partners when analyzing shared data.\n• Convert dry SERP charts and competitor audits into compelling editorial narrative arcs.\n• Defend strategic scopes, content budgets, and creative platforms with defensible quantitative proof.\n• Calibrate deliverable fidelity to audience expectations—from internal sync notes to polished executive decks.',
+        outcome: `• Understand the distinct operational lenses of Strategists, Content Leads, and Client Partners when analyzing shared data.
+• Convert dry SERP charts and competitor audits into compelling editorial narrative arcs.
+• Defend strategic scopes, content budgets, and creative platforms with defensible quantitative proof.
+• Calibrate deliverable fidelity to audience expectations—from internal sync notes to polished executive decks.`,
         discussionQuestions: [
           "How should a Content Lead translate a list of 50 keywords from a Strategist into 3 high-impact story arcs?",
           "When presenting research to a skeptical CMO, which tool metrics build immediate credibility?",
           "How do we prevent 'analysis paralysis' where teams spend excessive time gathering data rather than building creative deliverables?",
           "What are the telltale signs that a deliverable is too data-heavy and failing to communicate the strategic takeaway?",
           "How does data-led storytelling differ between a mid-campaign status update and a final retrospective post-mortem?"
-        ],
-        disciplines: [
-          {
-            id: 'workstream-strategist',
-            title: 'The Strategist: Opportunity Sizing & Architecture',
-            description: 'How Strategists synthesize tool outputs to establish brand altitude, market positioning, and content opportunity spaces.\n\nDeliverables: Competitive Landscape Audits, Keyword Architectures, Whitespace Opportunity Maps, and Audience Persona Dossiers.\n\nCore Mindset: "Where can our client legitimately differentiate and capture market share?"'
-          },
-          {
-            id: 'workstream-content-lead',
-            title: 'The Content Lead: Editorial Narrative & Format Hooks',
-            description: 'How Content Leads translate data points into creative ideas, editorial themes, and compelling storytelling angles.\n\nDeliverables: Editorial Calendars, Content Briefs, Headline Frameworks, and Series Storyboards.\n\nCore Mindset: "How do we make this insight emotionally engaging and irresistible to our audience?"'
-          },
-          {
-            id: 'workstream-client-partner',
-            title: 'The Client Partner: Commercial Defense & C-Suite Buy-In',
-            description: 'How Account Directors and Client Partners use data to defend project scopes, budget allocations, and demonstrate ROI.\n\nDeliverables: Executive Summaries, Quarterly Business Reviews (QBRs), SOW Justifications, and Metric Impact Reports.\n\nCore Mindset: "How does this research prove that Quietly is moving the commercial needle for the client?"'
-          },
-          {
-            id: 'workstream-creative-design',
-            title: 'The Creative & Visual Designer: Information Design',
-            description: 'How Designers transform complex matrices and statistical data into elegant, glanceable infographics and visual frameworks.\n\nDeliverables: Data Visualizations, Flowcharts, Slide Templates, and Interactive Brand Assets.\n\nCore Mindset: "How do we communicate this insight with visual clarity and brand elegance?"'
-          }
         ]
       }
     ]
