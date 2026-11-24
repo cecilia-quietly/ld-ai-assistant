@@ -74,7 +74,7 @@ export const AdminEditorModal: React.FC<AdminEditorModalProps> = ({
       setModDuration(targetModule.duration || '');
       setModPurpose(targetModule.purpose || '');
       setModOutcome(targetModule.outcome || '');
-      setModIsLocked(targetModule.isLocked !== undefined ? targetModule.isLocked : targetModule.number >= 2);
+      setModIsLocked(targetModule.isLocked !== undefined ? targetModule.isLocked : targetModule.number >= 4);
       setModIsOptional(!!targetModule.isOptional);
       setModImageUrl(targetModule.imageUrl || '');
     } else if (targetType === 'chapter' && targetCourse) {

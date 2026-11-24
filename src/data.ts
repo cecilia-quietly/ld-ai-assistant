@@ -327,7 +327,7 @@ export const curriculum: Module[] = [
     number: 2,
     title: 'Foundational — AI @ Quietly',
     subtitle: 'Philosophy & Principles',
-    isLocked: true,
+    isLocked: false,
     purpose: 'To move staff away from using AI as a "taskmaster" and toward using it as a "critical thinking partner".',
     preface: 'Philosophy: Understanding "the forest from the trees" and how to benefit from AI’s thoughts rather than just its output.',
     accentColor: '#319795',
@@ -355,7 +355,7 @@ export const curriculum: Module[] = [
     title: "Applied — Quietly's Tool Stack",
     subtitle: 'Standardizing research & synthesis',
     duration: 'Approx. 1.5 hours',
-    isLocked: true,
+    isLocked: false,
     purpose: 'To standardize how we use data and synthesis tools across different departments, aligning raw research outputs with strategic intent and high-impact client deliverables.',
     outcome: `• Articulate common “types” of research (tools): Describe the common areas of research Quietly conducts, and examples of the tools used to facilitate that research.
 

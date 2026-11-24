@@ -784,9 +784,14 @@ export default function App() {
               ? (savedMod.outcome && !savedMod.outcome.includes('Master Quietly') ? savedMod.outcome : baseMod.outcome)
               : (savedMod.outcome !== undefined ? savedMod.outcome : baseMod.outcome);
             const quizForm = baseMod.quizFormUrl || savedMod.quizFormUrl;
+            const shouldPublishM2M3 = !localStorage.getItem('quietly_published_m2_m3_v1') && (baseMod.id === 'foundational-ai-philosophy' || baseMod.id === 'applied-tool-stack');
+            const isLocked = shouldPublishM2M3
+              ? false
+              : (savedMod.isLocked !== undefined ? savedMod.isLocked : baseMod.isLocked);
             return {
               ...baseMod,
               ...savedMod,
+              isLocked,
               outcome,
               quizFormUrl: quizForm,
               courses: baseMod.courses.map(baseCourse => {
@@ -847,7 +852,30 @@ export default function App() {
               setCurriculumData(prev => prev.map(m => m.id === 'foundational-ai-philosophy' ? { ...m, courses: mod2.courses } : m));
             }
           }
+
+          // Publish Module 2 and Module 3 in cached custom curriculum once
+          if (!localStorage.getItem('quietly_published_m2_m3_v1')) {
+            let changed = false;
+            const updatedParsed = parsed.map((m: Module) => {
+              if ((m.id === 'foundational-ai-philosophy' || m.id === 'applied-tool-stack') && m.isLocked !== false) {
+                changed = true;
+                return { ...m, isLocked: false };
+              }
+              return m;
+            });
+            if (changed) {
+              localStorage.setItem('quietly_curriculum_custom', JSON.stringify(updatedParsed));
+              setCurriculumData(prev => prev.map(m =>
+                (m.id === 'foundational-ai-philosophy' || m.id === 'applied-tool-stack')
+                  ? { ...m, isLocked: false }
+                  : m
+              ));
+            }
+            localStorage.setItem('quietly_published_m2_m3_v1', 'true');
+          }
         }
+      } else if (!localStorage.getItem('quietly_published_m2_m3_v1')) {
+        localStorage.setItem('quietly_published_m2_m3_v1', 'true');
       }
     } catch (e) {
       console.error('Failed to sync curriculum storage', e);
@@ -927,7 +955,7 @@ export default function App() {
       moduleId: m.id,
       moduleNumber: m.number,
       moduleTitle: m.title,
-      isModuleLocked: isAdminMode ? false : (m.isLocked !== undefined ? m.isLocked : m.number >= 2)
+      isModuleLocked: isAdminMode ? false : (m.isLocked !== undefined ? m.isLocked : m.number >= 4)
     })));
   }, [curriculum, isAdminMode]);
 
@@ -2670,7 +2698,7 @@ export default function App() {
   const selectedModule = useMemo(() => {
     const mod = curriculum.find(m => m.id === selectedModuleId);
     if (!mod) return null;
-    const isModuleLocked = mod.isLocked !== undefined ? mod.isLocked : mod.number >= 2;
+    const isModuleLocked = mod.isLocked !== undefined ? mod.isLocked : mod.number >= 4;
     if (!isAdminMode && isModuleLocked) return null;
     return mod;
   }, [curriculum, selectedModuleId, isAdminMode]);
@@ -2733,7 +2761,7 @@ export default function App() {
                 >
                   <div className="space-y-1">
                     {curriculum.map((mod) => {
-                      const isModuleLocked = mod.isLocked !== undefined ? mod.isLocked : mod.number >= 2;
+                      const isModuleLocked = mod.isLocked !== undefined ? mod.isLocked : mod.number >= 4;
                       const isLocked = !isAdminMode && isModuleLocked;
                       const isHovered = !isLocked && (hoveredMenuModuleId || curriculum[1]?.id) === mod.id;
                       const hasCourses = mod.courses && mod.courses.length > 0;
@@ -2893,7 +2921,7 @@ export default function App() {
             <div className="flex items-center gap-2">
               <Shield size={14} className="text-slate-950" />
               <span>
-                <strong>Admin Mode Active:</strong> You can click into and preview locked modules (e.g. Module 3) and edit their chapters, playbooks, and reflection prompts.
+                <strong>Admin Mode Active:</strong> You can click into and preview locked modules (e.g. Module 4) and edit their chapters, playbooks, and reflection prompts.
               </span>
             </div>
             <div className="flex items-center gap-3 shrink-0">
@@ -2984,7 +3012,7 @@ export default function App() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredResults.map((module, idx) => {
-                const isModuleLocked = module.isLocked !== undefined ? module.isLocked : module.number >= 2;
+                const isModuleLocked = module.isLocked !== undefined ? module.isLocked : module.number >= 4;
                 const isLocked = !isAdminMode && isModuleLocked;
                 return (
                   <motion.div
@@ -3167,7 +3195,7 @@ export default function App() {
                   <div className="flex items-center gap-2.5 text-xs text-amber-950 font-medium">
                     <Shield size={14} className="text-amber-700 shrink-0" />
                     <span className="font-bold">Admin Module Control:</span>
-                    {(selectedModule.isLocked !== undefined ? selectedModule.isLocked : selectedModule.number >= 2) ? (
+                    {(selectedModule.isLocked !== undefined ? selectedModule.isLocked : selectedModule.number >= 4) ? (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-200/90 text-amber-950 font-bold text-[10px] uppercase">
                         <Lock size={10} /> Locked / Draft
                       </span>
@@ -3190,19 +3218,19 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => {
-                        const currentLocked = selectedModule.isLocked !== undefined ? selectedModule.isLocked : selectedModule.number >= 2;
+                        const currentLocked = selectedModule.isLocked !== undefined ? selectedModule.isLocked : selectedModule.number >= 4;
                         handleSaveModule({
                           ...selectedModule,
                           isLocked: !currentLocked
                         });
                       }}
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs ${
-                        (selectedModule.isLocked !== undefined ? selectedModule.isLocked : selectedModule.number >= 2)
+                        (selectedModule.isLocked !== undefined ? selectedModule.isLocked : selectedModule.number >= 4)
                           ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
                           : 'bg-amber-800 hover:bg-amber-900 text-white'
                       }`}
                     >
-                      {(selectedModule.isLocked !== undefined ? selectedModule.isLocked : selectedModule.number >= 2) ? (
+                      {(selectedModule.isLocked !== undefined ? selectedModule.isLocked : selectedModule.number >= 4) ? (
                         <>
                           <Unlock size={13} />
                           <span>Publish Module</span>
@@ -3477,7 +3505,7 @@ export default function App() {
                       <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                         {curriculum.map((m) => {
                           const isCurrent = m.id === selectedModule.id;
-                          const isModuleLocked = m.isLocked !== undefined ? m.isLocked : m.number >= 2;
+                          const isModuleLocked = m.isLocked !== undefined ? m.isLocked : m.number >= 4;
                           const isLocked = !isAdminMode && isModuleLocked;
                           const { percent } = getModuleProgress(m);
                           return (
